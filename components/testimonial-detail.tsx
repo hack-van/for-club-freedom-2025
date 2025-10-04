@@ -25,7 +25,7 @@ export default function TestimonialDetail({ id }: Props) {
       <div>
         <h3 className="font-bold">Summary</h3>
         <p>
-          {testimonial.summary ? testimonial.summary : "No summary available."}
+          {testimonial.summary ? testimonial.summary : "Summary will be available soon."}
         </p>
       </div>
       <div>
@@ -33,7 +33,7 @@ export default function TestimonialDetail({ id }: Props) {
         <p>
           {testimonial.testimonialText
             ? testimonial.testimonialText
-            : "No transcription available."}
+            : "Transcription will be available soon."}
         </p>
       </div>
     </div>

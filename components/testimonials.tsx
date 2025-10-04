@@ -12,10 +12,10 @@ export function Testimonials() {
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-balance">
-              What Our Customers Say
+              What Our Volunteers Say
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-pretty">
-              Don't just take our word for it. Here's what real customers have to say about their experience.
+              Don't just take our word for it. Here's what real volunteers have to say about their experience.
             </p>
           </div>
         </div>

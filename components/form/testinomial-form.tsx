@@ -19,7 +19,21 @@ import { api } from "@/convex/_generated/api";
 import { Spinner } from "../ui/spinner";
 import { toast } from "sonner";
 import UploadPreview from "../upload-preview";
-import AudioRecorder from "../audio-recorder";
+import dynamic from "next/dynamic";
+import { Mic } from "lucide-react";
+
+// Dynamic import with SSR disabled
+const AudioRecorder = dynamic(() => import("../audio-recorder"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex flex-col p-4 border items-center rounded-lg gap-4">
+      <Button size="icon" className="size-12 rounded-full" disabled>
+        <Mic className="size-6" />
+      </Button>
+      <div className="text-sm font-medium">Loading recorder...</div>
+    </div>
+  ),
+});
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),

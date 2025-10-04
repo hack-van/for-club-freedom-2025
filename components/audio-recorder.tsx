@@ -47,7 +47,7 @@ export default function AudioRecorder({ onRecordingComplete }: Props) {
           console.error("Error converting recording to file:", error);
         });
     }
-  }, [mediaBlobUrl]);
+  }, [mediaBlobUrl]); // Remove onRecordingComplete from dependencies
 
   const handleToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

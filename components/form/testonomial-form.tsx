@@ -20,6 +20,7 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Spinner } from "../ui/spinner";
 import { toast } from "sonner";
+import UploadPreview from "../upload-preview";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -134,6 +135,7 @@ export default function TestimonialForm() {
                     }
                   />
                 </FormControl>
+                <UploadPreview file={field.value[0]?.file || null} />
                 <FormMessage />
               </FormItem>
             )}

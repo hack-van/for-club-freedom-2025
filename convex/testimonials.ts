@@ -1,6 +1,7 @@
 
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { query } from "./_generated/server";
+import { mutation } from "./functions";
 
 export const getTestimonials = query({
   handler: async (ctx) => {
@@ -49,34 +50,7 @@ export const getTestimonialById = query({
   },
 });
 
-export const saveTranscriptSummary = mutation({
-  args: {
-    transcript: v.string(),
-    summary: v.string(),
-  },
-  handler: async (ctx, { transcript, summary }) => {
-    await ctx.db.insert("testimonials", {
-      transcript,
-      summary,
-      createdAt: Date.now(),
-    });
-    return id;
-  },
-});
 
-export const getTestimonialById = query({
-  args: { id: v.id("testimonials") },
-  handler: async (ctx, { id }) => {
-    const testimonial = await ctx.db.get(id);
-    if (!testimonial) {
-      return null;
-    }
-    return {
-      ...testimonial,
-      audioUrl: await ctx.storage.getUrl(testimonial.audio),
-    };
-  },
-});
 
 export const generateUploadUrl = mutation({
   handler: async (ctx) => {

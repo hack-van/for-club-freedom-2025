@@ -53,7 +53,6 @@ export default function TestimonialForm() {
   const router = useRouter();
 
   const generateUploadUrl = useMutation(api.testimonials.generateUploadUrl);
-  const saveTranscriptSummary = useMutation(api.testimonials.saveTranscriptSummary);
   const postTestimonial = useMutation(api.testimonials.postTestimonial);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -77,7 +76,7 @@ export default function TestimonialForm() {
       const { storageId } = await result.json();
 
       // Step 3: Save testimonial data with storage ID
-      await postTestimonial({
+      const id = await postTestimonial({
         name: values.name,
         email: values.email,
         audio: storageId,

@@ -8,10 +8,9 @@ export default defineSchema({
     name: v.string(),
     email: v.string(),
     audio: v.id("_storage"), // Storage ID for the audio file
-    summary: v.optional(v.string()), // Summary of the testimonial
-    transcript: v.optional(v.string()), // Transcript of the testimonial
     createdAt: v.optional(v.number()), // Timestamp when testimonial was created
     testimonialText: v.optional(v.string()), // Text version of the testimonial
     summary: v.optional(v.string()), // Summary of the testimonial
   }),
 });
+  

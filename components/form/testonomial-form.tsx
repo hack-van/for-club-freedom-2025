@@ -16,6 +16,10 @@ import { Button } from "../ui/button";
 import FileUpload from "../file-upload";
 import { Checkbox } from "../ui/checkbox";
 import { FileWithPreview } from "@/hooks/use-file-upload";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Spinner } from "../ui/spinner";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -32,8 +36,19 @@ export default function TestimonialForm() {
     defaultValues: { name: "", email: "", audioFile: [], constent: false },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const postTestimonial = useMutation(api.testimonials.postTestimonial);
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    await postTestimonial({
+      name: values.name,
+      email: values.email,
+      audio: "",
+    });
+    toast.success("Testimonial submitted successfully!", {
+      description: "Thank you for your submission.",
+    });
+    form.reset();
   }
 
   return (
@@ -106,7 +121,10 @@ export default function TestimonialForm() {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting && <Spinner />}
+            {form.formState.isSubmitting ? "Submitting..." : "Submit"}
+          </Button>
         </form>
       </Form>
     </div>

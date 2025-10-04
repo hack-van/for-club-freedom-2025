@@ -36,19 +36,58 @@ export default function TestimonialForm() {
     defaultValues: { name: "", email: "", audioFile: [], constent: false },
   });
 
+  const generateUploadUrl = useMutation(api.testimonials.generateUploadUrl);
   const postTestimonial = useMutation(api.testimonials.postTestimonial);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    await postTestimonial({
-      name: values.name,
-      email: values.email,
-      audio: "",
-    });
-    toast.success("Testimonial submitted successfully!", {
-      description: "Thank you for your submission.",
-    });
-    form.reset();
+    // Upload the audio file
+    const file = values.audioFile[0] as FileWithPreview;
+    if (!file || !file.file) {
+      toast.error("Please upload an audio file.");
+      return;
+    }
+
+    // Ensure we have a proper File object (not FileMetadata)
+    if (!(file.file instanceof File)) {
+      toast.error("Invalid file format. Please select a new file.");
+      return;
+    }
+
+    try {
+      // Step 1: Generate upload URL
+      const uploadUrl = await generateUploadUrl();
+
+      // Step 2: Upload the file to Convex storage
+      const result = await fetch(uploadUrl, {
+        method: "POST",
+        headers: { "Content-Type": file.file.type },
+        body: file.file,
+      });
+
+      if (!result.ok) {
+        throw new Error("Failed to upload file");
+      }
+
+      const { storageId } = await result.json();
+
+      // Step 3: Save testimonial data with storage ID
+      await postTestimonial({
+        name: values.name,
+        email: values.email,
+        audio: storageId,
+      });
+
+      toast.success("Testimonial submitted successfully!", {
+        description: "Thank you for your submission.",
+      });
+      form.reset();
+    } catch (error) {
+      console.error("Error submitting testimonial:", error);
+      toast.error("Failed to submit testimonial", {
+        description: "Please try again later.",
+      });
+    }
   }
 
   return (

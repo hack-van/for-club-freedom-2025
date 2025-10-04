@@ -5,8 +5,9 @@ export default defineSchema({
   // Other tables here...
 
   testimonials: defineTable({
-    audio: v.string(),
-    email: v.string(),
     name: v.string(),
+    email: v.string(),
+    audio: v.id("_storage"), // Storage ID for the audio file
+    createdAt: v.optional(v.number()), // Timestamp when testimonial was created
   }),
 });

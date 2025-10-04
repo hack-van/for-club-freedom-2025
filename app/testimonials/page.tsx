@@ -1,4 +1,5 @@
-export default function Testimonials() {
+import {Testimonials} from "@/components/testimonials";
+export default function TestimonialsPage() {
   return (
     <main className="flex min-h-screen flex-col items-center py-24 px-8 gap-y-12 max-w-screen-md mx-auto">
       <div className="flex flex-col items-center justify-center text-center">
@@ -6,7 +7,7 @@ export default function Testimonials() {
           Testimonials
         </h1>
       </div>
-
+    <Testimonials />
     </main>
   );
 }

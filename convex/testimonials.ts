@@ -20,12 +20,16 @@ export const postTestimonial = mutation({
     name: v.string(),
     email: v.string(),
     audio: v.id("_storage"),
+    summary: v.optional(v.string()),
+    transcript: v.optional(v.string()),
   },
-  handler: async (ctx, { name, email, audio }) => {
+  handler: async (ctx, { name, email, audio, summary, transcript }) => {
     await ctx.db.insert("testimonials", {
       name,
       email,
       audio,
+      summary,
+      transcript,
       createdAt: Date.now(),
     });
   },

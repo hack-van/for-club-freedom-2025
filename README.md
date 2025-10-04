@@ -39,7 +39,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 Copy the .env.example file as your .env file. Then edit it to include your api keys.
 
-```
+```bash
 cp .env.example .env
 ```
 
@@ -57,3 +57,11 @@ pnpm dlx shadcn@latest add <component-name>
 ```
 
 The list of available components can be found [here](https://ui.shadcn.com/docs/components/).
+
+## Running Convex sync engine
+
+```bash
+npx convex dev
+# or
+pnpm convex dev
+```

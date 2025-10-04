@@ -42,3 +42,18 @@ Copy the .env.example file as your .env file. Then edit it to include your api k
 ```
 cp .env.example .env
 ```
+
+## This project is using shadcn/ui and tailwindcss
+
+This project is using [shadcn/ui](https://ui.shadcn.com/) and [tailwindcss](https://tailwindcss.com/) for building the UI components. You can find the components in the `components` folder.
+
+To install the components, run the following command:
+
+```
+npx shadcn@latest add <component-name>
+# or
+pnpm dlx shadcn@latest add <component-name>
+
+```
+
+The list of available components can be found [here](https://ui.shadcn.com/docs/components/).

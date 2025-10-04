@@ -23,7 +23,7 @@ export function Testimonials() {
         </div>
       </section>
       <section className="w-full px-4 md:px-6">
-        <div className="grid gap-6 py-12 lg:grid-cols-3 lg:gap-8 w-full">
+        <div className="grid gap-6 py-12 md:grid-cols-2 lg:grid-cols-3 lg:gap-8 w-full">
           {testimonials?.map((testimonial) => (
             <Link
               key={testimonial._id}

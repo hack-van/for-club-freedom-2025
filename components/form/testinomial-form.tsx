@@ -38,6 +38,7 @@ export default function TestimonialForm() {
   });
 
   const generateUploadUrl = useMutation(api.testimonials.generateUploadUrl);
+  const saveTranscriptSummary = useMutation(api.testimonials.saveTranscriptSummary);
   const postTestimonial = useMutation(api.testimonials.postTestimonial);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -72,11 +73,34 @@ export default function TestimonialForm() {
 
       const { storageId } = await result.json();
 
-      // Step 3: Save testimonial data with storage ID
+      // Step 3: Call third-party API to get transcript and summary
+      // Replace 'THIRD_PARTY_API_URL' with your actual endpoint
+      let transcript = "";
+      let summary = "";
+      try {
+        const thirdPartyResponse = await fetch("THIRD_PARTY_API_URL", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ audioUrl: uploadUrl }), // or pass the audio file as needed
+        });
+        if (thirdPartyResponse.ok) {
+          const data = await thirdPartyResponse.json();
+          transcript = data.transcript || "";
+          summary = data.summary || "";
+        } else {
+          toast.error("Failed to get transcript/summary from third-party API.");
+        }
+      } catch (err) {
+        toast.error("Error calling third-party API.");
+      }
+
+      // Step 4: Save testimonial data with transcript and summary
       await postTestimonial({
         name: values.name,
         email: values.email,
         audio: storageId,
+        summary,
+        transcript,
       });
 
       toast.success("Testimonial submitted successfully!", {

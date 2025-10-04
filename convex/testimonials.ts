@@ -1,3 +1,4 @@
+
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
@@ -30,6 +31,20 @@ export const postTestimonial = mutation({
       audio,
       summary,
       transcript,
+      createdAt: Date.now(),
+    });
+  },
+});
+
+export const saveTranscriptSummary = mutation({
+  args: {
+    transcript: v.string(),
+    summary: v.string(),
+  },
+  handler: async (ctx, { transcript, summary }) => {
+    await ctx.db.insert("testimonials", {
+      transcript,
+      summary,
       createdAt: Date.now(),
     });
   },

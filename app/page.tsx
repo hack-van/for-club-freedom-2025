@@ -1,4 +1,4 @@
-import TestonomialForm from "@/components/form/testonomial-form";
+import TestonomialForm from "@/components/form/testinomial-form";
 
 export default function Home() {
   return (

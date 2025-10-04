@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "./ui/button";
-import { Mic } from "lucide-react";
+import { Mic, Square } from "lucide-react";
 import React, { useEffect, useRef } from "react";
 import { useReactMediaRecorder } from "react-media-recorder";
 
@@ -70,7 +70,11 @@ export default function AudioRecorder({ onRecordingComplete }: Props) {
         onClick={handleToggle}
         variant={isRecording ? "destructive" : "default"}
       >
-        <Mic className="size-6" />
+        {isRecording ? (
+          <Square className="size-4 bg-current" />
+        ) : (
+          <Mic className="size-6" />
+        )}
       </Button>
       <div className="text-sm font-medium">
         {isRecording ? `Recording...` : "Tap to start recording"}

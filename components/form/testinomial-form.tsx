@@ -13,19 +13,32 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import FileUpload from "../file-upload";
 import { Checkbox } from "../ui/checkbox";
-import { FileWithPreview } from "@/hooks/use-file-upload";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Spinner } from "../ui/spinner";
 import { toast } from "sonner";
 import UploadPreview from "../upload-preview";
+import dynamic from "next/dynamic";
+import { Mic } from "lucide-react";
+
+// Dynamic import with SSR disabled
+const AudioRecorder = dynamic(() => import("../audio-recorder"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex flex-col p-4 border items-center rounded-lg gap-4">
+      <Button size="icon" className="size-12 rounded-full" disabled>
+        <Mic className="size-6" />
+      </Button>
+      <div className="text-sm font-medium">Loading recorder...</div>
+    </div>
+  ),
+});
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.email("Please enter a valid email address"),
-  audioFile: z.array(z.any()).min(1, "Please upload an audio file"),
+  audioFile: z.file({ error: "Please record your audio testimonial" }),
   constent: z
     .boolean()
     .refine((val) => val === true, { message: "You must agree to the terms" }),
@@ -34,7 +47,7 @@ const formSchema = z.object({
 export default function TestimonialForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", email: "", audioFile: [], constent: false },
+    defaultValues: { name: "", email: "", constent: false },
   });
 
   const generateUploadUrl = useMutation(api.testimonials.generateUploadUrl);
@@ -42,18 +55,6 @@ export default function TestimonialForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    // Upload the audio file
-    const file = values.audioFile[0] as FileWithPreview;
-    if (!file || !file.file) {
-      toast.error("Please upload an audio file.");
-      return;
-    }
-
-    // Ensure we have a proper File object (not FileMetadata)
-    if (!(file.file instanceof File)) {
-      toast.error("Invalid file format. Please select a new file.");
-      return;
-    }
 
     try {
       // Step 1: Generate upload URL
@@ -62,8 +63,8 @@ export default function TestimonialForm() {
       // Step 2: Upload the file to Convex storage
       const result = await fetch(uploadUrl, {
         method: "POST",
-        headers: { "Content-Type": file.file.type },
-        body: file.file,
+        headers: { "Content-Type": values.audioFile.type },
+        body: values.audioFile,
       });
 
       if (!result.ok) {
@@ -128,14 +129,15 @@ export default function TestimonialForm() {
               <FormItem>
                 <FormLabel>Audio Testimonial</FormLabel>
                 <FormControl>
-                  <FileUpload
-                    value={field.value || []}
-                    onChange={(files: FileWithPreview[]) =>
-                      field.onChange(files)
-                    }
+                  <AudioRecorder
+                    onRecordingComplete={(audioFile) => {
+                      // Update the form
+                      field.onChange(audioFile);
+                      console.log("Recorded audio file:", audioFile);
+                    }}
                   />
                 </FormControl>
-                <UploadPreview file={field.value[0]?.file || null} />
+                {field.value ? <UploadPreview file={field.value} /> : null}
                 <FormMessage />
               </FormItem>
             )}

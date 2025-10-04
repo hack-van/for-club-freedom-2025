@@ -22,12 +22,27 @@ export const postTestimonial = mutation({
     audio: v.id("_storage"),
   },
   handler: async (ctx, { name, email, audio }) => {
-    await ctx.db.insert("testimonials", {
+    const id = await ctx.db.insert("testimonials", {
       name,
       email,
       audio,
       createdAt: Date.now(),
     });
+    return id;
+  },
+});
+
+export const getTestimonialById = query({
+  args: { id: v.id("testimonials") },
+  handler: async (ctx, { id }) => {
+    const testimonial = await ctx.db.get(id);
+    if (!testimonial) {
+      return null;
+    }
+    return {
+      ...testimonial,
+      audioUrl: await ctx.storage.getUrl(testimonial.audio),
+    };
   },
 });
 

@@ -15,6 +15,7 @@ export default function AudioRecorder({ onRecordingComplete }: Props) {
   const { status, startRecording, stopRecording, mediaBlobUrl } =
     useReactMediaRecorder({
       audio: true,
+      blobPropertyBag: { type: "audio/mpeg" },
     });
 
   const isRecording = status === "recording";

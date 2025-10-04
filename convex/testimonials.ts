@@ -22,12 +22,13 @@ export const postTestimonial = mutation({
     audio: v.id("_storage"),
   },
   handler: async (ctx, { name, email, audio }) => {
-    await ctx.db.insert("testimonials", {
+    const id = await ctx.db.insert("testimonials", {
       name,
       email,
       audio,
       createdAt: Date.now(),
     });
+    return id;
   },
 });
 

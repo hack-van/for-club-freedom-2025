@@ -13,6 +13,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import FileUpload from "../file-upload";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -59,6 +60,7 @@ export default function TestimonialForm() {
               </FormItem>
             )}
           />
+          <FileUpload />
           <Button type="submit">Submit</Button>
         </form>
       </Form>

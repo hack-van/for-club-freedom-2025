@@ -14,16 +14,20 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import FileUpload from "../file-upload";
+import { Checkbox } from "../ui/checkbox";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.email("Please enter a valid email address"),
+  constent: z
+    .boolean()
+    .refine((val) => val === true, { message: "You must agree to the terms" }),
 });
 
 export default function TestimonialForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", email: "" },
+    defaultValues: { name: "", email: "", constent: false },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -61,6 +65,28 @@ export default function TestimonialForm() {
             )}
           />
           <FileUpload />
+          <FormField
+            control={form.control}
+            name="constent"
+            render={({ field }) => (
+              <FormItem className="flex items-start gap-3">
+                <FormControl>
+                  <Checkbox
+                    name="constent"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-2 leading-none">
+                  <FormLabel className="text-sm font-normal">
+                    I agree that my personal information and testimonial may be
+                    processsed and published on the Club Freedom service.
+                  </FormLabel>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
           <Button type="submit">Submit</Button>
         </form>
       </Form>

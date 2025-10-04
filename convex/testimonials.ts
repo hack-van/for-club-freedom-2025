@@ -31,6 +31,20 @@ export const postTestimonial = mutation({
   },
 });
 
+export const getTestimonialById = query({
+  args: { id: v.id("testimonials") },
+  handler: async (ctx, { id }) => {
+    const testimonial = await ctx.db.get(id);
+    if (!testimonial) {
+      return null;
+    }
+    return {
+      ...testimonial,
+      audioUrl: await ctx.storage.getUrl(testimonial.audio),
+    };
+  },
+});
+
 export const generateUploadUrl = mutation({
   handler: async (ctx) => {
     return await ctx.storage.generateUploadUrl();

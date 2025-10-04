@@ -21,6 +21,9 @@ import { api } from "@/convex/_generated/api";
 import { Spinner } from "../ui/spinner";
 import { toast } from "sonner";
 import UploadPreview from "../upload-preview";
+import { Tabs, TabsTrigger } from "../ui/tabs";
+import { TabsList } from "@radix-ui/react-tabs";
+import AudioRecorder from "../audio-recorder";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -121,12 +124,17 @@ export default function TestimonialForm() {
               </FormItem>
             )}
           />
+          <Tabs defaultValue="upload">
+            <TabsList>
+              <TabsTrigger value="upload">Upload Audio</TabsTrigger>
+              <TabsTrigger value="recording">Record Audio</TabsTrigger>
+            </TabsList>
+          </Tabs>
           <FormField
             control={form.control}
             name="audioFile"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Audio Testimonial</FormLabel>
                 <FormControl>
                   <FileUpload
                     value={field.value || []}
@@ -140,6 +148,7 @@ export default function TestimonialForm() {
               </FormItem>
             )}
           />
+          <AudioRecorder />
           <FormField
             control={form.control}
             name="constent"

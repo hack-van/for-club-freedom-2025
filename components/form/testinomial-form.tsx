@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import UploadPreview from "../upload-preview";
 import dynamic from "next/dynamic";
 import { Mic } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 // Dynamic import with SSR disabled
 const AudioRecorder = dynamic(() => import("../audio-recorder"), {
@@ -49,6 +50,7 @@ export default function TestimonialForm() {
     resolver: zodResolver(formSchema),
     defaultValues: { name: "", email: "", constent: false },
   });
+  const router = useRouter();
 
   const generateUploadUrl = useMutation(api.testimonials.generateUploadUrl);
   const postTestimonial = useMutation(api.testimonials.postTestimonial);
@@ -74,7 +76,7 @@ export default function TestimonialForm() {
       const { storageId } = await result.json();
 
       // Step 3: Save testimonial data with storage ID
-      await postTestimonial({
+      const id = await postTestimonial({
         name: values.name,
         email: values.email,
         audio: storageId,
@@ -84,6 +86,7 @@ export default function TestimonialForm() {
         description: "Thank you for your submission.",
       });
       form.reset();
+      router.push(`/testimonials/${id}`);
     } catch (error) {
       console.error("Error submitting testimonial:", error);
       toast.error("Failed to submit testimonial", {

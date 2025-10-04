@@ -65,3 +65,7 @@ npx convex dev
 # or
 pnpm convex dev
 ```
+
+## Run any .ts file in isolation
+
+`pnpm run_in_isolation -- path/to/your/file.ts`

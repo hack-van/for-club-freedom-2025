@@ -9,5 +9,7 @@ export default defineSchema({
     email: v.string(),
     audio: v.id("_storage"), // Storage ID for the audio file
     createdAt: v.optional(v.number()), // Timestamp when testimonial was created
+    testimonialText: v.optional(v.string()), // Text version of the testimonial
+    summary: v.optional(v.string()), // Summary of the testimonial
   }),
 });

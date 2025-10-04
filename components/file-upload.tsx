@@ -1,17 +1,40 @@
-"use client"
+"use client";
 
-import { AlertCircleIcon, PaperclipIcon, UploadIcon, XIcon } from "lucide-react"
+import {
+  AlertCircleIcon,
+  AudioWaveformIcon,
+  PaperclipIcon,
+  UploadIcon,
+  XIcon,
+} from "lucide-react";
+import { useCallback } from "react";
 
 import {
   formatBytes,
   useFileUpload,
-} from "@/hooks/use-file-upload"
-import { Button } from "@/components/ui/button"
+  type FileWithPreview,
+} from "@/hooks/use-file-upload";
+import { Button } from "@/components/ui/button";
 
-// Create some dummy initial files
+interface FileUploadProps {
+  value?: FileWithPreview[];
+  onChange?: (files: FileWithPreview[]) => void;
+}
 
-export default function Component() {
-  const maxSize = 5 * 1024 * 1024 // 5MB default
+export default function Component({ value = [], onChange }: FileUploadProps) {
+  const maxSize = 5 * 1024 * 1024; // 5MB default
+
+  // Create a stable callback that won't cause re-renders
+  const handleFilesChange = useCallback(
+    (files: FileWithPreview[]) => {
+      // Only call onChange if it exists and we're not in render phase
+      if (onChange) {
+        // Use setTimeout to ensure this happens after render
+        setTimeout(() => onChange(files), 0);
+      }
+    },
+    [onChange]
+  );
 
   const [
     { files, isDragging, errors },
@@ -26,9 +49,11 @@ export default function Component() {
     },
   ] = useFileUpload({
     maxSize,
-  })
+    accept: "audio/*",
+    onFilesChange: handleFilesChange,
+  });
 
-  const file = files[0]
+  const file = files[0];
 
   return (
     <div className="flex flex-col gap-2">
@@ -82,7 +107,7 @@ export default function Component() {
             className="flex items-center justify-between gap-2 rounded-xl border px-4 py-2"
           >
             <div className="flex items-center gap-3 overflow-hidden">
-              <PaperclipIcon
+              <AudioWaveformIcon
                 className="size-4 shrink-0 opacity-60"
                 aria-hidden="true"
               />
@@ -106,5 +131,5 @@ export default function Component() {
         </div>
       )}
     </div>
-  )
+  );
 }

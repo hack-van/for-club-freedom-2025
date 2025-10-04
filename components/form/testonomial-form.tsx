@@ -15,10 +15,12 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import FileUpload from "../file-upload";
 import { Checkbox } from "../ui/checkbox";
+import { FileWithPreview } from "@/hooks/use-file-upload";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.email("Please enter a valid email address"),
+  audioFile: z.array(z.any()).min(1, "Please upload an audio file"),
   constent: z
     .boolean()
     .refine((val) => val === true, { message: "You must agree to the terms" }),
@@ -27,7 +29,7 @@ const formSchema = z.object({
 export default function TestimonialForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", email: "", constent: false },
+    defaultValues: { name: "", email: "", audioFile: [], constent: false },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -64,7 +66,24 @@ export default function TestimonialForm() {
               </FormItem>
             )}
           />
-          <FileUpload />
+          <FormField
+            control={form.control}
+            name="audioFile"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Audio Testimonial</FormLabel>
+                <FormControl>
+                  <FileUpload
+                    value={field.value || []}
+                    onChange={(files: FileWithPreview[]) =>
+                      field.onChange(files)
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="constent"

@@ -24,15 +24,28 @@ export const postTestimonial = mutation({
     summary: v.optional(v.string()),
     transcript: v.optional(v.string()),
   },
-  handler: async (ctx, { name, email, audio, summary, transcript }) => {
-    await ctx.db.insert("testimonials", {
+  handler: async (ctx, { name, email, audio }) => {
+    const id = await ctx.db.insert("testimonials", {
       name,
       email,
       audio,
-      summary,
-      transcript,
       createdAt: Date.now(),
     });
+    return id;
+  },
+});
+
+export const getTestimonialById = query({
+  args: { id: v.id("testimonials") },
+  handler: async (ctx, { id }) => {
+    const testimonial = await ctx.db.get(id);
+    if (!testimonial) {
+      return null;
+    }
+    return {
+      ...testimonial,
+      audioUrl: await ctx.storage.getUrl(testimonial.audio),
+    };
   },
 });
 
@@ -47,6 +60,21 @@ export const saveTranscriptSummary = mutation({
       summary,
       createdAt: Date.now(),
     });
+    return id;
+  },
+});
+
+export const getTestimonialById = query({
+  args: { id: v.id("testimonials") },
+  handler: async (ctx, { id }) => {
+    const testimonial = await ctx.db.get(id);
+    if (!testimonial) {
+      return null;
+    }
+    return {
+      ...testimonial,
+      audioUrl: await ctx.storage.getUrl(testimonial.audio),
+    };
   },
 });
 

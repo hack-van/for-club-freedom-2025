@@ -1,7 +1,12 @@
-export default function UploadPreview({ file }: { file: File | null }) {
-    if (!file) return null;
+export default function UploadPreview({ file }: { file: File }) {
+  console.log("Rendering audio preview for file:", file);
 
-    console.log("Rendering audio preview for file:", file);
-
-    return <audio controls controlsList="nodownload" src={URL.createObjectURL(file)} className="w-full" />;
+  return (
+    <audio
+      controls
+      controlsList="nodownload"
+      src={URL.createObjectURL(file)}
+      className="w-full"
+    />
+  );
 }

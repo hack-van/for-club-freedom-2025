@@ -1,9 +1,9 @@
 import {Testimonials} from "@/components/testimonials";
 export default function TestimonialsPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center py-24 px-8 gap-y-12 max-w-screen-md mx-auto">
+    <main className="container mx-auto px-4">
       <div className="flex flex-col items-center justify-center text-center">
-        <h1 className="text-4xl font-bold">
+        <h1 className="pt-4 text-4xl font-bold">
           Testimonials
         </h1>
       </div>

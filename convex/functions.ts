@@ -11,7 +11,7 @@ import {
   customCtx,
   customMutation,
 } from "convex-helpers/server/customFunctions";
-import { summarize_text } from "@/gemini/summarize_text";
+import { GeminiResponse, summarize_text } from "@/gemini/summarize_text";
 import { api } from "./_generated/api";
 import { v } from "convex/values";
 import { transcribeAudio } from "@/lib/transcribe";
@@ -135,10 +135,11 @@ export const summarizeText = action({
   handler: async (ctx, { testimonialId, text }) => {
     console.log("Starting text summarization using Gemini API");
     try {
-      const summary = await summarize_text(text);
-      await ctx.runMutation(api.testimonials.updateSummary, {
+      const resp: GeminiResponse = await summarize_text(text);
+      await ctx.runMutation(api.testimonials.updateSummaryAndTitle, {
         id: testimonialId,
-        summary,
+        summary: resp.summary,
+        title: resp.title,
       });
       console.log(`Summarization completed for testimonial ${testimonialId}`);
     } catch (error) {

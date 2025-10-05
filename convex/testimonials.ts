@@ -86,13 +86,14 @@ export const updateTranscription = mutation({
   },
 });
 
-export const updateSummary = mutation({
+export const updateSummaryAndTitle = mutation({
   args: {
     id: v.id("testimonials"),
     summary: v.string(),
+    title: v.string(),
   },
-  handler: async (ctx, { id, summary }) => {
-    await ctx.db.patch(id, { summary });
+  handler: async (ctx, { id, summary, title }) => {
+    await ctx.db.patch(id, { summary, title });
   },
 });
 

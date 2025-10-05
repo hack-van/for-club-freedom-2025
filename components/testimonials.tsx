@@ -25,11 +25,11 @@ export function Testimonials() {
       <section className="w-full px-4 md:px-6">
         <div className="grid gap-6 py-12 lg:gap-8 w-full">
           {testimonials?.map((testimonial) => (
-            <div key={testimonial._id}>
+            <div key={testimonial._id} className="flex justify-between items-start">
               <Link
                 key={testimonial._id}
                 href={`/testimonials/${testimonial._id}`}
-                className="cursor-pointer"
+                className="cursor-pointer flex-1"
               >
                 <Card className="grid grid-cols-2">
                   <div className="mx-4 place-content-center">
@@ -43,10 +43,10 @@ export function Testimonials() {
                       //     className="w-full h-32 object-cover"
                       //   />
                       // ) : 
-                      testimonial.audioUrl ? (
+                      testimonial.audio ? (
                         <audio
                           controls
-                          src={testimonial.audioUrl}
+                          src={testimonial.audio}
                           className="w-full"
                         />
                       ) : (
@@ -71,27 +71,14 @@ export function Testimonials() {
                   </CardContent>
                 </Card>
               </Link>
-              <div className="mt-auto flex flex-col items-end">
-                {testimonial.audioUrl && (
-                  <a href={testimonial.audioUrl} download={`audio-${testimonial._id}.mp3`}>Download Audio</a>
-                  // <button
-                  //   onClick={(e) => {
-                  //     // Prevent Link navigation when button is clicked.
-                  //     e.preventDefault();
-                  //     e.stopPropagation();
-                  //     // Create a temporary link to trigger download of audio file.
-                  //     const link = document.createElement("a");
-                  //     link.href = testimonial.audioUrl!;
-                  //     // Use a filename based on testimonial ID.
-                  //     link.download = `audio-${testimonial._id}.mp3`;
-                  //     document.body.appendChild(link);
-                  //     link.click();
-                  //     document.body.removeChild(link);
-                  //   }}
-                  //   className="mt-2 px-3 py-1 border rounded hover:bg-gray-100"
-                  // >
-                  //   Download Audio
-                  // </button>
+              <div className="flex flex-col items-end ml-4">
+                {testimonial.audio && (
+                  <a
+                    href={`/api/files/download/${encodeURIComponent(testimonial.audio)}`}
+                    className="mt-2 px-3 py-1 border rounded hover:bg-gray-100"
+                  >
+                    Download Audio
+                  </a>
                 )}
                 <button
                   onClick={(e) => {
@@ -99,7 +86,9 @@ export function Testimonials() {
                     e.preventDefault();
                     e.stopPropagation();
                     // Prepare the text content by combining summary and transcription.
-                    const textContent = `Summary: ${testimonial.summary}\n\nTranscription: ${testimonial.testimonialText || "No transcription available."}`;
+                    const textContent = `Summary: ${testimonial.summary}\n\nTranscription: ${
+                      testimonial.testimonialText || "No transcription available."
+                    }`;
                     // Create a Blob with the text content.
                     const blob = new Blob([textContent], { type: "text/plain" });
                     const url = URL.createObjectURL(blob);

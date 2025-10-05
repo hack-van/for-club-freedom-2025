@@ -1,5 +1,6 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { query } from "./_generated/server";
+import { mutation } from "./functions";
 
 export const getUrl = query({
   args: { storageId: v.id("_storage") },
@@ -50,6 +51,26 @@ export const getTestimonialById = query({
       ...testimonial,
       mediaUrl,
     };
+  },
+});
+
+export const updateTranscription = mutation({
+  args: {
+    id: v.id("testimonials"),
+    text: v.string(),
+  },
+  handler: async (ctx, { id, text }) => {
+    await ctx.db.patch(id, { testimonialText: text });
+  },
+});
+
+export const updateSummary = mutation({
+  args: {
+    id: v.id("testimonials"),
+    summary: v.string(),
+  },
+  handler: async (ctx, { id, summary }) => {
+    await ctx.db.patch(id, { summary });
   },
 });
 

@@ -10,6 +10,7 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
+  FormDescription,
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -20,7 +21,7 @@ import { Spinner } from "../ui/spinner";
 import { toast } from "sonner";
 import UploadPreview from "../upload-preview";
 import dynamic from "next/dynamic";
-import { Mic } from "lucide-react";
+import { Mic, Video } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Textarea } from "../ui/textarea";
@@ -33,6 +34,18 @@ const AudioRecorder = dynamic(() => import("../audio-recorder"), {
     <div className="flex flex-col p-4 border items-center rounded-lg gap-4">
       <Button size="icon" className="size-12 rounded-full" disabled>
         <Mic className="size-6" />
+      </Button>
+      <div className="text-sm font-medium">Loading recorder...</div>
+    </div>
+  ),
+});
+
+const VideoRecorder = dynamic(() => import("../video-recorder"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex flex-col p-4 border items-center rounded-lg gap-4">
+      <Button size="icon" className="size-12 rounded-full" disabled>
+        <Video className="size-6" />
       </Button>
       <div className="text-sm font-medium">Loading recorder...</div>
     </div>
@@ -173,6 +186,7 @@ export default function TestimonialForm() {
             <TabsList>
               <TabsTrigger value="text">Text</TabsTrigger>
               <TabsTrigger value="audio">Audio</TabsTrigger>
+              <TabsTrigger value="video">Video</TabsTrigger>
             </TabsList>
             <TabsContent value="text">
               <FormField
@@ -211,8 +225,31 @@ export default function TestimonialForm() {
                 )}
               />
             </TabsContent>
+            <TabsContent value="video">
+              <FormField
+                control={form.control}
+                name="audioFile"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Video Testimonial</FormLabel>
+                    <FormDescription>
+                      Please record a short video testimonial
+                    </FormDescription>
+                    <FormControl>
+                      <VideoRecorder
+                        onRecordingComplete={(videoFile) => {
+                          // Update the form
+                          field.onChange(videoFile);
+                          console.log("Recorded video file:", videoFile);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </TabsContent>
           </Tabs>
-
           <FormField
             control={form.control}
             name="constent"

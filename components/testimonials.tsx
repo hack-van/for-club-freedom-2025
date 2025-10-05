@@ -73,24 +73,25 @@ export function Testimonials() {
               </Link>
               <div className="mt-auto flex flex-col items-end">
                 {testimonial.audioUrl && (
-                  <button
-                    onClick={(e) => {
-                      // Prevent Link navigation when button is clicked.
-                      e.preventDefault();
-                      e.stopPropagation();
-                      // Create a temporary link to trigger download of audio file.
-                      const link = document.createElement("a");
-                      link.href = testimonial.audioUrl!;
-                      // Use a filename based on testimonial ID.
-                      link.download = `audio-${testimonial._id}.mp3`;
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
-                    }}
-                    className="mt-2 px-3 py-1 border rounded hover:bg-gray-100"
-                  >
-                    Download Audio
-                  </button>
+                  <a href={testimonial.audioUrl} download={`audio-${testimonial._id}.mp3`}>Download Audio</a>
+                  // <button
+                  //   onClick={(e) => {
+                  //     // Prevent Link navigation when button is clicked.
+                  //     e.preventDefault();
+                  //     e.stopPropagation();
+                  //     // Create a temporary link to trigger download of audio file.
+                  //     const link = document.createElement("a");
+                  //     link.href = testimonial.audioUrl!;
+                  //     // Use a filename based on testimonial ID.
+                  //     link.download = `audio-${testimonial._id}.mp3`;
+                  //     document.body.appendChild(link);
+                  //     link.click();
+                  //     document.body.removeChild(link);
+                  //   }}
+                  //   className="mt-2 px-3 py-1 border rounded hover:bg-gray-100"
+                  // >
+                  //   Download Audio
+                  // </button>
                 )}
                 <button
                   onClick={(e) => {

@@ -11,7 +11,7 @@ export type GeminiResponse = {
   summary: string;
 }
 
-export async function summarize_text(input: string): Promise<GeminiResponse> {
+export async function summarize_text(input: string, name: string): Promise<GeminiResponse> {
   const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,
   });
@@ -21,7 +21,9 @@ export async function summarize_text(input: string): Promise<GeminiResponse> {
     },
     systemInstruction: [
         {
-          text: `You are an AI Assistant tasked with summarizing content within one paragraph. You will get text as input. There is no need to include sources.`,
+          text: `You are an AI Assistant tasked with summarizing testimonials from volunteers who are sharing their 
+          experiences about working with the less fortunate. Summarize their testimonials within one paragraph and generate a title. 
+          You will get text as input. There is no need to include sources. Include the volunteer's name in the summary.`,
         }
     ],
     responseMimeType: "application/json",
@@ -45,7 +47,7 @@ export async function summarize_text(input: string): Promise<GeminiResponse> {
       role: 'user',
       parts: [
         {
-          text: input,
+          text: `The name of the volunteer is ${name}. ${input}`,
         },
       ],
     },

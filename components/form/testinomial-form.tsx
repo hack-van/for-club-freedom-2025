@@ -219,7 +219,6 @@ export default function TestimonialForm() {
                         }}
                       />
                     </FormControl>
-                    {field.value ? <UploadPreview file={field.value} /> : null}
                     <FormMessage />
                   </FormItem>
                 )}

@@ -55,7 +55,7 @@ const VideoRecorder = dynamic(() => import("../video-recorder"), {
 const formSchema = z
   .object({
     name: z.string().min(2, "Name must be at least 2 characters"),
-    email: z.email("Please enter a valid email address"),
+    email: z.email("Please enter a valid email address").optional(),
     mediaFile: z
       .file({ error: "Please record your audio testimonial" })
       .optional(),
@@ -85,7 +85,7 @@ const formSchema = z
 export default function TestimonialForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", email: "", writtenText: "", constent: false },
+    defaultValues: { name: "", writtenText: "", constent: false },
   });
   const router = useRouter();
 
@@ -178,7 +178,7 @@ export default function TestimonialForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Email <small>(optional)</small></FormLabel>
                 <FormControl>
                   <Input placeholder="you@example.com" {...field} />
                 </FormControl>
@@ -236,7 +236,7 @@ export default function TestimonialForm() {
             <TabsContent value="video">
               <FormField
                 control={form.control}
-                name="audioFile"
+                name="mediaFile"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Video Testimonial</FormLabel>

@@ -26,9 +26,6 @@ importers:
       '@radix-ui/react-tabs':
         specifier: ^1.1.13
         version: 1.1.13(@types/react-dom@19.2.0(@types/react@19.2.0))(@types/react@19.2.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      assemblyai:
-        specifier: ^4.16.1
-        version: 4.16.1
       axios:
         specifier: ^1.12.2
         version: 1.12.2
@@ -74,15 +71,9 @@ importers:
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      tabs:
-        specifier: link:@/components/ui/tabs
-        version: link:@/components/ui/tabs
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.3.1
-      textarea:
-        specifier: link:@/components/ui/textarea
-        version: link:@/components/ui/textarea
       zod:
         specifier: ^4.1.11
         version: 4.1.11
@@ -1459,10 +1450,6 @@ packages:
   aria-hidden@1.2.6:
     resolution: {integrity: sha512-ik3ZgC9dY/lYVVM++OISsaYDeg1tb0VtP5uL3ouh1koGOaUMDPpbFIei4JkFimWUFPn90sbMNMXQAIVOlnYKJA==}
     engines: {node: '>=10'}
-
-  assemblyai@4.16.1:
-    resolution: {integrity: sha512-gpcR1cIkCeJdV5RJN7Na4BTwfF6pHauIMQ+Hz2szdlQ+KY/rpsxdYa0ox0mBhrnqNR5YFctGJVvQUaTp9k3fPw==}
-    engines: {node: '>=18'}
 
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
@@ -3305,13 +3292,6 @@ snapshots:
   aria-hidden@1.2.6:
     dependencies:
       tslib: 2.8.1
-
-  assemblyai@4.16.1:
-    dependencies:
-      ws: 8.18.3
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
 
   asynckit@0.4.0: {}
 

@@ -220,6 +220,9 @@ export default function TestimonialForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Audio Testimonial</FormLabel>
+                    <FormDescription>
+                      Please find a quiet place to record your audio testimonial.
+                    </FormDescription>
                     <FormControl>
                       <AudioRecorder
                         onRecordingComplete={(mediaFile) => {
@@ -242,7 +245,7 @@ export default function TestimonialForm() {
                   <FormItem>
                     <FormLabel>Video Testimonial</FormLabel>
                     <FormDescription>
-                      Please record a short video testimonial
+                      Please find a quiet place to record your video testimonial. 
                     </FormDescription>
                     <FormControl>
                       <VideoRecorder

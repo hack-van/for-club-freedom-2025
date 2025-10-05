@@ -8,6 +8,14 @@ export const getTestimonials = query({
   },
 });
 
+export const searchTestimonials = query({
+  handler: async (ctx) => {
+    return await ctx.db.query("testimonials").withSearchIndex("search_text", (q) =>
+    q.search("testimonialText", "hello hi"),
+  )
+  },
+});
+
 export const postTestimonial = mutation({
   args: {
     name: v.string(),

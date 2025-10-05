@@ -21,7 +21,8 @@ export default function TestimonialDetail({ id }: Props) {
         {testimonial.name}'s Testimonial
       </h2>
       <p className="font-mono text-muted-foreground">{testimonial.email}</p>
-      {testimonial.audioUrl && <audio controls src={testimonial.audioUrl} />}
+      {testimonial.mediaUrl && testimonial.media_type == "audio" && <audio controls src={testimonial.mediaUrl} />}
+      {testimonial.mediaUrl && testimonial.media_type == "video" && <video controls src={testimonial.mediaUrl} />}
       <div>
         <h3 className="font-bold">Summary</h3>
         <p>
@@ -29,7 +30,9 @@ export default function TestimonialDetail({ id }: Props) {
         </p>
       </div>
       <div>
-        <h3 className="font-bold">Transcription</h3>
+        <h3 className="font-bold">
+          {testimonial.media_id ? "Transcription" : "Testimonial"}
+        </h3>
         <p>
           {testimonial.testimonialText
             ? testimonial.testimonialText

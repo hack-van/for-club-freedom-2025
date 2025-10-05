@@ -3,15 +3,7 @@ import { mutation, query } from "./_generated/server";
 
 export const getTestimonials = query({
   handler: async (ctx) => {
-    const testimonials = await ctx.db.query("testimonials").collect();
-
-    // Get audio URLs for each testimonial
-    return Promise.all(
-      testimonials.map(async (testimonial) => ({
-        ...testimonial,
-        audioUrl: await ctx.storage.getUrl(testimonial.audio),
-      }))
-    );
+    return await ctx.db.query("testimonials").collect();
   },
 });
 
@@ -19,13 +11,15 @@ export const postTestimonial = mutation({
   args: {
     name: v.string(),
     email: v.string(),
-    audio: v.id("_storage"),
+    audio: v.optional(v.id("_storage")),
+    text: v.string(),
   },
-  handler: async (ctx, { name, email, audio }) => {
+  handler: async (ctx, { name, email, audio, text }) => {
     const id = await ctx.db.insert("testimonials", {
       name,
       email,
       audio,
+      testimonialText: text,
       createdAt: Date.now(),
     });
     return id;
@@ -39,9 +33,13 @@ export const getTestimonialById = query({
     if (!testimonial) {
       return null;
     }
+
+    const audioUrl = testimonial.audio
+      ? await ctx.storage.getUrl(testimonial.audio)
+      : undefined;
     return {
       ...testimonial,
-      audioUrl: await ctx.storage.getUrl(testimonial.audio),
+      audioUrl,
     };
   },
 });

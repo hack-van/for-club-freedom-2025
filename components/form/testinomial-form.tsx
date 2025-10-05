@@ -22,6 +22,9 @@ import UploadPreview from "../upload-preview";
 import dynamic from "next/dynamic";
 import { Mic } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Textarea } from "../ui/textarea";
+import { useState } from "react";
 
 // Dynamic import with SSR disabled
 const AudioRecorder = dynamic(() => import("../audio-recorder"), {
@@ -36,50 +39,86 @@ const AudioRecorder = dynamic(() => import("../audio-recorder"), {
   ),
 });
 
-const formSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.email("Please enter a valid email address"),
-  audioFile: z.file({ error: "Please record your audio testimonial" }),
-  constent: z
-    .boolean()
-    .refine((val) => val === true, { message: "You must agree to the terms" }),
-});
+const formSchema = z
+  .object({
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.email("Please enter a valid email address"),
+    audioFile: z
+      .file({ error: "Please record your audio testimonial" })
+      .optional(),
+    writtenText: z.string(),
+    constent: z.boolean().refine((val) => val === true, {
+      message: "You must agree to the terms",
+    }),
+  })
+  .superRefine((data, ctx) => {
+    if (
+      (!data.writtenText || data.audioFile) &&
+      (data.writtenText || !data.audioFile)
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Please provide your testimonial",
+        path: ["writtenText"],
+      });
+      ctx.addIssue({
+        code: "custom",
+        message: "Please provide an audio testimonial",
+        path: ["audioFile"],
+      });
+    }
+  });
 
 export default function TestimonialForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", email: "", constent: false },
+    defaultValues: { name: "", email: "", writtenText: "", constent: false },
   });
   const router = useRouter();
 
   const generateUploadUrl = useMutation(api.testimonials.generateUploadUrl);
   const postTestimonial = useMutation(api.testimonials.postTestimonial);
 
+  const [tabValue, setTabValue] = useState("text");
+
+  const handleTabChange = (value: string) => {
+    setTabValue(value);
+    form.resetField("audioFile");
+    form.resetField("writtenText");
+  };
+
+  const uploadAudioFile = async (file: File) => {
+    const uploadUrl = await generateUploadUrl();
+    const result = await fetch(uploadUrl, {
+      method: "POST",
+      headers: { "Content-Type": file.type },
+      body: file,
+    });
+    if (!result.ok) {
+      return undefined;
+    }
+    const { storageId } = await result.json();
+    return storageId as string;
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
 
     try {
-      // Step 1: Generate upload URL
-      const uploadUrl = await generateUploadUrl();
-
-      // Step 2: Upload the file to Convex storage
-      const result = await fetch(uploadUrl, {
-        method: "POST",
-        headers: { "Content-Type": values.audioFile.type },
-        body: values.audioFile,
-      });
-
-      if (!result.ok) {
-        throw new Error("Failed to upload file");
+      let storageId: string | undefined = undefined;
+      if (values.audioFile) {
+        storageId = await uploadAudioFile(values.audioFile);
+        if (!storageId) {
+          throw new Error("Failed to upload audio file");
+        }
       }
-
-      const { storageId } = await result.json();
 
       // Step 3: Save testimonial data with storage ID
       const id = await postTestimonial({
         name: values.name,
         email: values.email,
-        audio: storageId,
+        audio: storageId as any,
+        text: values.writtenText,
       });
 
       toast.success("Testimonial submitted successfully!", {
@@ -125,26 +164,55 @@ export default function TestimonialForm() {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="audioFile"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Audio Testimonial</FormLabel>
-                <FormControl>
-                  <AudioRecorder
-                    onRecordingComplete={(audioFile) => {
-                      // Update the form
-                      field.onChange(audioFile);
-                      console.log("Recorded audio file:", audioFile);
-                    }}
-                  />
-                </FormControl>
-                {field.value ? <UploadPreview file={field.value} /> : null}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
+          <Tabs
+            className="w-full"
+            value={tabValue}
+            onValueChange={handleTabChange}
+          >
+            <TabsList>
+              <TabsTrigger value="text">Text</TabsTrigger>
+              <TabsTrigger value="audio">Audio</TabsTrigger>
+            </TabsList>
+            <TabsContent value="text">
+              <FormField
+                control={form.control}
+                name="writtenText"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Written Testimonial</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} placeholder="Start typing..." />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </TabsContent>
+            <TabsContent value="audio">
+              <FormField
+                control={form.control}
+                name="audioFile"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Audio Testimonial</FormLabel>
+                    <FormControl>
+                      <AudioRecorder
+                        onRecordingComplete={(audioFile) => {
+                          // Update the form
+                          field.onChange(audioFile);
+                          console.log("Recorded audio file:", audioFile);
+                        }}
+                      />
+                    </FormControl>
+                    {field.value ? <UploadPreview file={field.value} /> : null}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </TabsContent>
+          </Tabs>
+
           <FormField
             control={form.control}
             name="constent"

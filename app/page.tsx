@@ -8,6 +8,9 @@ export default function Home() {
           Welcome to Club Freedom Testomonial
         </h1>
         <p className="mt-4 text-lg">Please share your testimonial with us!</p>
+        <p className="mt-4 italic text-lg text-gray-600">
+          "Let your light shine before others" – Matthew 5:16
+        </p>
       </div>
       <TestonomialForm />
     </main>

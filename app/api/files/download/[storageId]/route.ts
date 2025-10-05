@@ -11,12 +11,14 @@ export async function GET(
 ) {
   const url = await fetchQuery(api.testimonials.getUrl, { storageId: params.storageId as any });
   if (!url) return new NextResponse("Not found", { status: 404 });
-
+  const metaData = await fetchQuery(api.testimonials.getMetadata, { storageId: params.storageId as any });
   // Stream from Convex's signed URL
   const upstream = await fetch(url, { cache: "no-store" });
   if (!upstream.ok || !upstream.body) return new NextResponse("Not found", { status: 404 });
-
-  const filename = `${params.storageId}.mp3`; // ← set your preferred name (or look it up from DB)
+  var filename = `${params.storageId}.mp3`
+  if (metaData?.contentType === "video/mp4") {
+    filename = `${params.storageId}.mp4`
+  }
   return new NextResponse(upstream.body, {
     headers: {
       "Content-Type": upstream.headers.get("content-type") ?? "application/octet-stream",

@@ -9,9 +9,31 @@ export const getUrl = query({
     return url; // time-limited URL from Convex
   },
 });
+export const getMetadata = query({
+  args: {
+    storageId: v.id("_storage"),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.system.get(args.storageId);
+  },
+});
 export const getTestimonials = query({
   handler: async (ctx) => {
-    return await ctx.db.query("testimonials").collect();
+    const testimonials = await ctx.db.query("testimonials").collect();
+
+    const testimonialsWithMedia = await Promise.all(
+      testimonials.map(async (testimonial) => {
+        const mediaUrl = testimonial.media_id
+          ? await ctx.storage.getUrl(testimonial.media_id)
+          : undefined;
+        return {
+          ...testimonial,
+          mediaUrl,
+        };
+      })
+    );
+
+    return testimonialsWithMedia;
   },
 });
 

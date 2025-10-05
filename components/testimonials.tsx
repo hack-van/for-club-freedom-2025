@@ -33,28 +33,29 @@ export function Testimonials() {
               >
                 <Card className="grid grid-cols-2">
                   <div className="mx-4 place-content-center">
-                    {
-                      // If there's video content, render video player.
-                      // Otherwise, show audio player if available. If neither, show placeholder.
-                      // testimonial.videoUrl ? (
-                      //   <video
-                      //     controls
-                      //     src={testimonial.videoUrl}
-                      //     className="w-full h-32 object-cover"
-                      //   />
-                      // ) : 
-                      testimonial.audio ? (
+                    {testimonial.mediaUrl ? (
+                      testimonial.media_type === "audio" ? (
                         <audio
                           controls
-                          src={testimonial.audio}
+                          src={testimonial.mediaUrl}
                           className="w-full"
+                        />
+                      ) : testimonial.media_type === "video" ? (
+                        <video
+                          controls
+                          src={testimonial.mediaUrl}
+                          className="w-full h-32 object-cover"
                         />
                       ) : (
                         <div className="flex items-center justify-center bg-gray-200 w-full h-32">
                           <span className="text-sm text-gray-500">No media</span>
                         </div>
                       )
-                    }
+                    ) : (
+                      <div className="flex items-center justify-center bg-gray-200 w-full h-32">
+                        <span className="text-sm text-gray-500">No media</span>
+                      </div>
+                    )}
                   </div>
                   <CardContent className="flex flex-col gap-4 p-6">
                     <p
@@ -72,12 +73,12 @@ export function Testimonials() {
                 </Card>
               </Link>
               <div className="ml-4   grid grid-rows-2 gap-2 self-stretch">
-                {testimonial.audio && (
+                {testimonial.media_id && (
                   <a
-                    href={`/api/files/download/${encodeURIComponent(testimonial.audio)}`}
+                    href={`/api/files/download/${encodeURIComponent(testimonial.media_id)}`}
                     className="mt-2 flex items-center justify-center px-3 py-1 border rounded hover:bg-gray-100"
                   >
-                    Download Audio
+                    Download Media
                   </a>
                 )}
                 <button

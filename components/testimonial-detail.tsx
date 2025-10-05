@@ -18,16 +18,34 @@ export default function TestimonialDetail({ id }: Props) {
     return <div>Loading testimonial...</div>;
   }
 
-  const downloadAudio = () => {
+  const downloadMedia = async () => {
     if (!testimonial.mediaUrl) return;
-    const link = document.createElement("a");
-    link.href = testimonial.mediaUrl;
-    link.download = `${testimonial.name}-${testimonial.createdAt}-testimonial.${
-      testimonial.media_type === "audio" ? "mp3" : "mp4"
-    }`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+
+    try {
+      // Fetch the file as a blob
+      const response = await fetch(testimonial.mediaUrl);
+      if (!response.ok) throw new Error("Failed to fetch media");
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+
+      // Create download link
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${testimonial.name}-${testimonial.createdAt}-testimonial.${
+        testimonial.media_type === "audio" ? "mp3" : "mp4"
+      }`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Clean up the blob URL
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Download failed:", error);
+      // Fallback: open in new tab
+      window.open(testimonial.mediaUrl, "_blank");
+    }
   };
 
   const downloadTranscription = () => {
@@ -41,7 +59,7 @@ export default function TestimonialDetail({ id }: Props) {
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
-  }
+  };
 
   return (
     <div className="flex flex-col gap-8">
@@ -54,7 +72,7 @@ export default function TestimonialDetail({ id }: Props) {
       )}
       <div className="flex gap-2">
         {testimonial.mediaUrl && (
-          <Button onClick={downloadAudio}>
+          <Button onClick={downloadMedia}>
             Download {testimonial.media_type == "audio" ? "Audio" : "Video"}
           </Button>
         )}

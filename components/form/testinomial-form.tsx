@@ -56,7 +56,7 @@ const formSchema = z
   .object({
     name: z.string().min(2, "Name must be at least 2 characters"),
     email: z.email("Please enter a valid email address"),
-    audioFile: z
+    mediaFile: z
       .file({ error: "Please record your audio testimonial" })
       .optional(),
     writtenText: z.string(),
@@ -66,8 +66,8 @@ const formSchema = z
   })
   .superRefine((data, ctx) => {
     if (
-      (!data.writtenText || data.audioFile) &&
-      (data.writtenText || !data.audioFile)
+      (!data.writtenText || data.mediaFile) &&
+      (data.writtenText || !data.mediaFile)
     ) {
       ctx.addIssue({
         code: "custom",
@@ -77,7 +77,7 @@ const formSchema = z
       ctx.addIssue({
         code: "custom",
         message: "Please provide an audio testimonial",
-        path: ["audioFile"],
+        path: ["mediaFile"],
       });
     }
   });
@@ -96,7 +96,7 @@ export default function TestimonialForm() {
 
   const handleTabChange = (value: string) => {
     setTabValue(value);
-    form.resetField("audioFile");
+    form.resetField("mediaFile");
     form.resetField("writtenText");
   };
 
@@ -119,18 +119,27 @@ export default function TestimonialForm() {
 
     try {
       let storageId: string | undefined = undefined;
-      if (values.audioFile) {
-        storageId = await uploadAudioFile(values.audioFile);
+      let media_type = "text"
+      if (values.mediaFile) {
+        storageId = await uploadAudioFile(values.mediaFile);
         if (!storageId) {
           throw new Error("Failed to upload audio file");
         }
+        if (values.mediaFile.type.startsWith("audio")) {
+          media_type = "audio"
+        }
+        else if (values.mediaFile.type.startsWith("video")) {
+          media_type = "video"
+        }
       }
+
 
       // Step 3: Save testimonial data with storage ID
       const id = await postTestimonial({
         name: values.name,
         email: values.email,
-        audio: storageId as any,
+        media_id: storageId as any,
+        media_type: media_type,
         text: values.writtenText,
       });
 
@@ -206,16 +215,16 @@ export default function TestimonialForm() {
             <TabsContent value="audio">
               <FormField
                 control={form.control}
-                name="audioFile"
+                name="mediaFile"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Audio Testimonial</FormLabel>
                     <FormControl>
                       <AudioRecorder
-                        onRecordingComplete={(audioFile) => {
+                        onRecordingComplete={(mediaFile) => {
                           // Update the form
-                          field.onChange(audioFile);
-                          console.log("Recorded audio file:", audioFile);
+                          field.onChange(mediaFile);
+                          console.log("Recorded audio file:", mediaFile);
                         }}
                       />
                     </FormControl>

@@ -10,7 +10,7 @@ export const getTestimonials = query({
 export const postTestimonial = mutation({
   args: {
     name: v.string(),
-    email: v.string(),
+    email: v.optional(v.string()),
     media_id: v.optional(v.id("_storage")),
     media_type: v.string(),
     text: v.string(),

@@ -3,10 +3,15 @@
 // npm install -D @types/node
 
 import {
-  GoogleGenAI,
+  GoogleGenAI, Type
 } from '@google/genai';
 
-export async function summarize_text(input: string): Promise<string> {
+export type GeminiResponse = {
+  title: string;
+  summary: string;
+}
+
+export async function summarize_text(input: string): Promise<GeminiResponse> {
   const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,
   });
@@ -19,6 +24,20 @@ export async function summarize_text(input: string): Promise<string> {
           text: `You are an AI Assistant tasked with summarizing content within one paragraph. You will get text as input. There is no need to include sources.`,
         }
     ],
+    responseMimeType: "application/json",
+    responseSchema: {
+      type: Type.OBJECT,
+      properties: {
+        title: {
+          type: Type.STRING,
+        },
+        summary: {
+          type: Type.STRING,
+        },
+      },
+      propertyOrdering: ["title", "summary"],
+    },
+      
   };
   const model = 'gemini-2.5-flash';
   const contents = [
@@ -37,7 +56,16 @@ export async function summarize_text(input: string): Promise<string> {
         config,
         contents,
     });
-    return response.text ?? '';
+    var response_json: GeminiResponse = {title: "", summary: ""};
+    try {
+      if (response.text) {
+        response_json = JSON.parse(response.text);
+      }
+    } catch (e) {
+      console.error('Error parsing JSON response:', e);
+      throw e;
+    }
+    return response_json;
   } catch (error) {
     console.error('Error summarizing text:', error);
     throw error;

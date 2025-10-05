@@ -2,9 +2,46 @@ import { v } from "convex/values";
 import { query } from "./_generated/server";
 import { mutation } from "./functions";
 
+export const getUrl = query({
+  args: { storageId: v.id("_storage") },
+  handler: async (ctx, { storageId }) => {
+    const url = await ctx.storage.getUrl(storageId);
+    return url; // time-limited URL from Convex
+  },
+});
+
+export const getMetadata = query({
+  args: {
+    storageId: v.id("_storage"),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.system.get(args.storageId);
+  },
+});
+
 export const getTestimonials = query({
   handler: async (ctx) => {
-    return await ctx.db.query("testimonials").collect();
+    const testimonials = await ctx.db
+      .query("testimonials")
+      .filter((q) => q.neq(q.field("title"), undefined))
+      .filter((q) => q.neq(q.field("summary"), undefined))
+      .filter((q) => q.neq(q.field("testimonialText"), undefined))
+      .order("desc")
+      .collect();
+
+    const testimonialsWithMedia = await Promise.all(
+      testimonials.map(async (testimonial) => {
+        const mediaUrl = testimonial.media_id
+          ? await ctx.storage.getUrl(testimonial.media_id)
+          : undefined;
+        return {
+          ...testimonial,
+          mediaUrl,
+        };
+      })
+    );
+
+    return testimonialsWithMedia;
   },
 });
 

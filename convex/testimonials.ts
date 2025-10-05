@@ -18,14 +18,16 @@ export const postTestimonial = mutation({
   args: {
     name: v.string(),
     email: v.string(),
-    audio: v.optional(v.id("_storage")),
+    media_id: v.optional(v.id("_storage")),
+    media_type: v.string(),
     text: v.string(),
   },
-  handler: async (ctx, { name, email, audio, text }) => {
+  handler: async (ctx, { name, email, media_id, media_type, text }) => {
     const id = await ctx.db.insert("testimonials", {
       name,
       email,
-      audio,
+      media_id,
+      media_type,
       testimonialText: text,
       createdAt: Date.now(),
     });
@@ -41,12 +43,12 @@ export const getTestimonialById = query({
       return null;
     }
 
-    const audioUrl = testimonial.audio
-      ? await ctx.storage.getUrl(testimonial.audio)
+    const mediaUrl = testimonial.media_id
+      ? await ctx.storage.getUrl(testimonial.media_id)
       : undefined;
     return {
       ...testimonial,
-      audioUrl,
+      mediaUrl,
     };
   },
 });

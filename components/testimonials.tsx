@@ -23,14 +23,35 @@ export function Testimonials() {
         </div>
       </section>
       <section className="w-full px-4 md:px-6">
-        <div className="grid gap-6 py-12 md:grid-cols-2 lg:grid-cols-3 lg:gap-8 w-full">
+        <div className="grid gap-6 py-12 lg:gap-8 w-full">
           {testimonials?.map((testimonial) => (
             <Link
               key={testimonial._id}
               href={`/testimonials/${testimonial._id}`}
               className="cursor-pointer"
             >
-              <Card className="flex flex-col">
+              <Card className="grid grid-cols-2">
+                <div className="mx-4 place-content-center">
+                  {
+                  // testimonial.videoUrl ? (
+                  //   <video
+                  //     controls
+                  //     src={testimonial.videoUrl}
+                  //     className="w-full h-32 object-cover"
+                  //   />
+                  // ) : 
+                  testimonial.audioUrl ? (
+                    <audio
+                      controls
+                      src={testimonial.audioUrl}
+                      className="w-full"
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center bg-gray-200 w-full h-32">
+                      <span className="text-sm text-gray-500">No media</span>
+                    </div>
+                  )}
+                </div>
                 <CardContent className="flex flex-col gap-4 p-6">
                   <p
                     className="text-muted-foreground leading-relaxed text-pretty h-20 overflow-hidden"

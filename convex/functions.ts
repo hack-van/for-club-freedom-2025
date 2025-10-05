@@ -19,6 +19,28 @@ import { transcribeAudio } from "@/lib/transcribe";
 // start using Triggers, with table types from schema.ts
 const triggers = new Triggers<DataModel>();
 
+
+triggers.register("testimonials", async (ctx, change) => {
+  const oldEmail = change.oldDoc?.email;
+  const email = change.newDoc?.email;
+  const oldName = change.oldDoc?.name;
+  const name = change.newDoc?.name;
+  const oldSummary = change.oldDoc?.summary;
+  const summary = change.newDoc?.summary;
+  const oldText = change.oldDoc?.testimonialText;
+  const text = change.newDoc?.testimonialText;
+  const oldTitle = change.oldDoc?.title;
+  const title = change.newDoc?.title;
+
+  if (oldEmail === email && oldName === name && oldSummary === summary && oldText === text && oldTitle === title) {
+    return;
+  }
+  const newSearchText = [email, name, summary, text, title].join(" ");
+  await ctx.db.patch(change.id, { searchText: newSearchText });
+
+  console.log(`updated testimonial searchText for testimonial ${change.id}`);
+});
+
 // Only trigger when media_id changes
 triggers.register("testimonials", async (ctx, change) => {
   const oldMediaId = change.oldDoc?.media_id;

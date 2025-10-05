@@ -20,24 +20,40 @@ export const getMetadata = query({
 });
 
 export const getTestimonials = query({
-  handler: async (ctx) => {
-    const testimonials = await ctx.db
-      .query("testimonials")
-      .filter((q) => q.neq(q.field("title"), undefined))
-      .filter((q) => q.neq(q.field("summary"), undefined))
-      .filter((q) => q.neq(q.field("testimonialText"), undefined))
-      .order("desc")
-      .collect();
+  args: { searchQuery: v.optional(v.string()) },
+  handler: async (ctx, { searchQuery }) => {
+    let testimonials: any[] = [];
+
+    if (searchQuery && searchQuery.trim() !== "") {
+      // Full-text search path (no filters before withSearchIndex)
+      testimonials = await ctx.db
+        .query("testimonials")
+        .withSearchIndex("search_posts", q =>
+          q.search("searchText", searchQuery)
+        )
+        .collect();
+
+      // Optional JS-side filtering
+      testimonials = testimonials.filter(
+        t => t.title && t.summary && t.testimonialText
+      );
+    } else {
+      // Normal query path with filters
+      testimonials = await ctx.db
+        .query("testimonials")
+        .filter(q => q.neq(q.field("title"), undefined))
+        .filter(q => q.neq(q.field("summary"), undefined))
+        .filter(q => q.neq(q.field("testimonialText"), undefined))
+        .order("desc")
+        .collect();
+    }
 
     const testimonialsWithMedia = await Promise.all(
-      testimonials.map(async (testimonial) => {
-        const mediaUrl = testimonial.media_id
-          ? await ctx.storage.getUrl(testimonial.media_id)
+      testimonials.map(async t => {
+        const mediaUrl = t.media_id
+          ? await ctx.storage.getUrl(t.media_id)
           : undefined;
-        return {
-          ...testimonial,
-          mediaUrl,
-        };
+        return { ...t, mediaUrl };
       })
     );
 

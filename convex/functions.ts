@@ -135,13 +135,18 @@ export const summarizeText = action({
   handler: async (ctx, { testimonialId, text }) => {
     console.log("Starting text summarization using Gemini API");
     try {
-      const resp: GeminiResponse = await summarize_text(text);
-      await ctx.runMutation(api.testimonials.updateSummaryAndTitle, {
-        id: testimonialId,
-        summary: resp.summary,
-        title: resp.title,
-      });
-      console.log(`Summarization completed for testimonial ${testimonialId}`);
+      const testimonial = await ctx.runQuery(api.testimonials.getTestimonialById, { id: testimonialId });
+      if (testimonial){
+        const resp: GeminiResponse = await summarize_text(text, testimonial.name);
+        await ctx.runMutation(api.testimonials.updateSummaryAndTitle, {
+          id: testimonialId,
+          summary: resp.summary,
+          title: resp.title,
+        });
+        console.log(`Summarization completed for testimonial ${testimonialId}`);
+      } else {
+        throw new Error("Testimonial not found");
+      }
     } catch (error) {
       console.error(
         `Summarization failed for testimonial ${testimonialId}: ${error}`

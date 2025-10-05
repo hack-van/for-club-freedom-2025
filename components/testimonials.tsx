@@ -25,50 +25,98 @@ export function Testimonials() {
       <section className="w-full px-4 md:px-6">
         <div className="grid gap-6 py-12 lg:gap-8 w-full">
           {testimonials?.map((testimonial) => (
-            <Link
-              key={testimonial._id}
-              href={`/testimonials/${testimonial._id}`}
-              className="cursor-pointer"
-            >
-              <Card className="grid grid-cols-2">
-                <div className="mx-4 place-content-center">
-                  {
-                  // testimonial.videoUrl ? (
-                  //   <video
-                  //     controls
-                  //     src={testimonial.videoUrl}
-                  //     className="w-full h-32 object-cover"
-                  //   />
-                  // ) : 
-                  testimonial.audioUrl ? (
-                    <audio
-                      controls
-                      src={testimonial.audioUrl}
-                      className="w-full"
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center bg-gray-200 w-full h-32">
-                      <span className="text-sm text-gray-500">No media</span>
-                    </div>
-                  )}
-                </div>
-                <CardContent className="flex flex-col gap-4 p-6">
-                  <p
-                    className="text-muted-foreground leading-relaxed text-pretty h-20 overflow-hidden"
-                    style={{
-                      display: "-webkit-box",
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: "vertical",
-                    }}
-                  >
-                    "{testimonial.summary}"
-                  </p>
-                  <div className="mt-auto flex flex-col">
-                    <p className="text-sm font-semibold">{testimonial.name}</p>
+            <div key={testimonial._id}>
+              <Link
+                key={testimonial._id}
+                href={`/testimonials/${testimonial._id}`}
+                className="cursor-pointer"
+              >
+                <Card className="grid grid-cols-2">
+                  <div className="mx-4 place-content-center">
+                    {
+                      // If there's video content, render video player.
+                      // Otherwise, show audio player if available. If neither, show placeholder.
+                      // testimonial.videoUrl ? (
+                      //   <video
+                      //     controls
+                      //     src={testimonial.videoUrl}
+                      //     className="w-full h-32 object-cover"
+                      //   />
+                      // ) : 
+                      testimonial.audioUrl ? (
+                        <audio
+                          controls
+                          src={testimonial.audioUrl}
+                          className="w-full"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center bg-gray-200 w-full h-32">
+                          <span className="text-sm text-gray-500">No media</span>
+                        </div>
+                      )
+                    }
                   </div>
-                </CardContent>
-              </Card>
-            </Link>
+                  <CardContent className="flex flex-col gap-4 p-6">
+                    <p
+                      className="text-muted-foreground leading-relaxed text-pretty h-20 overflow-hidden"
+                      style={{
+                        display: "-webkit-box",
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: "vertical",
+                      }}
+                    >
+                      "{testimonial.summary}"
+                    </p>
+                    <p className="text-sm font-semibold self-start">{testimonial.name}</p>
+                  </CardContent>
+                </Card>
+              </Link>
+              <div className="mt-auto flex flex-col items-end">
+                {testimonial.audioUrl && (
+                  <button
+                    onClick={(e) => {
+                      // Prevent Link navigation when button is clicked.
+                      e.preventDefault();
+                      e.stopPropagation();
+                      // Create a temporary link to trigger download of audio file.
+                      const link = document.createElement("a");
+                      link.href = testimonial.audioUrl!;
+                      // Use a filename based on testimonial ID.
+                      link.download = `audio-${testimonial._id}.mp3`;
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }}
+                    className="mt-2 px-3 py-1 border rounded hover:bg-gray-100"
+                  >
+                    Download Audio
+                  </button>
+                )}
+                <button
+                  onClick={(e) => {
+                    // Prevent Link navigation when button is clicked.
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // Prepare the text content by combining summary and transcription.
+                    const textContent = `Summary: ${testimonial.summary}\n\nTranscription: ${testimonial.testimonialText || "No transcription available."}`;
+                    // Create a Blob with the text content.
+                    const blob = new Blob([textContent], { type: "text/plain" });
+                    const url = URL.createObjectURL(blob);
+                    // Create a temporary link to trigger download.
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.download = `testimonial-${testimonial._id}.txt`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                  }}
+                  className="mt-2 px-3 py-1 border rounded hover:bg-gray-100"
+                >
+                  Download Text
+                </button>
+              </div>
+            </div>
           ))}
         </div>
       </section>

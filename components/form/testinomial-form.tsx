@@ -22,6 +22,9 @@ import UploadPreview from "../upload-preview";
 import dynamic from "next/dynamic";
 import { Mic } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
+import { Textarea } from "../ui/textarea"
+import { useState } from "react";
 
 // Dynamic import with SSR disabled
 const AudioRecorder = dynamic(() => import("../audio-recorder"), {
@@ -39,10 +42,20 @@ const AudioRecorder = dynamic(() => import("../audio-recorder"), {
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.email("Please enter a valid email address"),
-  audioFile: z.file({ error: "Please record your audio testimonial" }),
+  audioFile: z.file({ error: "Please record your audio testimonial" }).optional(),
+  writtenText: z.string().optional(),
   constent: z
     .boolean()
     .refine((val) => val === true, { message: "You must agree to the terms" }),
+}).superRefine((data, ctx) => {
+  if ((!data.writtenText || data.audioFile) && (data.writtenText || !data.audioFile)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Either written or audio input is required",
+      path: ["writtenFile", "audioFile"]
+
+    })
+  }
 });
 
 export default function TestimonialForm() {
@@ -55,6 +68,15 @@ export default function TestimonialForm() {
   const generateUploadUrl = useMutation(api.testimonials.generateUploadUrl);
   const postTestimonial = useMutation(api.testimonials.postTestimonial);
 
+  const [tabValue, setTabValue] = useState("text")
+
+  const handleTabChange = (value: string) => {
+    setTabValue(value);
+    form.resetField("audioFile")
+
+
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
 
@@ -65,7 +87,7 @@ export default function TestimonialForm() {
       // Step 2: Upload the file to Convex storage
       const result = await fetch(uploadUrl, {
         method: "POST",
-        headers: { "Content-Type": values.audioFile.type },
+        headers: { "Content-Type": typeof (values.audioFile) },
         body: values.audioFile,
       });
 
@@ -125,26 +147,57 @@ export default function TestimonialForm() {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="audioFile"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Audio Testimonial</FormLabel>
-                <FormControl>
-                  <AudioRecorder
-                    onRecordingComplete={(audioFile) => {
-                      // Update the form
-                      field.onChange(audioFile);
-                      console.log("Recorded audio file:", audioFile);
-                    }}
-                  />
-                </FormControl>
-                {field.value ? <UploadPreview file={field.value} /> : null}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
+
+          <Tabs className="w-full" value={tabValue} onValueChange={handleTabChange}>
+            <TabsList>
+              <TabsTrigger value="text">Text</TabsTrigger>
+              <TabsTrigger value="audio">Audio</TabsTrigger>
+            </TabsList>
+            <TabsContent value="text">
+              <FormField
+                control={form.control}
+                name="writtenText"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Written Testimonial</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} placeholder="Start typing..." />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+
+
+
+
+            </TabsContent>
+            <TabsContent value="audio">
+              <FormField
+                control={form.control}
+                name="audioFile"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Audio Testimonial</FormLabel>
+                    <FormControl>
+                      <AudioRecorder
+                        onRecordingComplete={(audioFile) => {
+                          // Update the form
+                          field.onChange(audioFile);
+                          console.log("Recorded audio file:", audioFile);
+                        }}
+                      />
+                    </FormControl>
+                    {field.value ? <UploadPreview file={field.value} /> : null}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </TabsContent>
+          </Tabs>
+
           <FormField
             control={form.control}
             name="constent"
@@ -173,6 +226,6 @@ export default function TestimonialForm() {
           </Button>
         </form>
       </Form>
-    </div>
+    </div >
   );
 }

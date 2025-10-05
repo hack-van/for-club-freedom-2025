@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useReactMediaRecorder } from "react-media-recorder";
 import { Button } from "./ui/button";
-import { Mic, Square, Video, VideoOff } from "lucide-react";
+import { Square, Video } from "lucide-react";
 
 type Props = {
   onRecordingComplete: (videoFile: File) => void;
@@ -101,13 +101,24 @@ export default function VideoRecorder({ onRecordingComplete }: Props) {
     <div className="flex flex-col p-4 border items-center rounded-lg gap-4 w-full">
       {/* Video Preview */}
       <div className="relative w-full aspect-video bg-gray-900 rounded-lg overflow-hidden">
-        <video
-          ref={videoPreviewRef}
-          autoPlay
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-        />
+        {isRecording && (
+          <video
+            ref={videoPreviewRef}
+            autoPlay
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+          />
+        )}
+
+        {!isRecording && mediaBlobUrl && (
+          <video
+            src={mediaBlobUrl}
+            controls
+            controlsList="nodownload"
+            className="w-full h-full object-cover"
+          />
+        )}
 
         {/* Recording indicator */}
         {isRecording && (
@@ -137,17 +148,6 @@ export default function VideoRecorder({ onRecordingComplete }: Props) {
           <Button size="sm" variant="outline" onClick={handleClearRecording}>
             Clear
           </Button>
-        )}
-      </div>
-
-      {/* Status */}
-      <div className="text-sm font-medium text-center">
-        {isRecording ? (
-          <span className="text-red-600">Recording in progress...</span>
-        ) : mediaBlobUrl ? (
-          <span className="text-green-600">Recording complete!</span>
-        ) : (
-          <span>Tap to start video recording</span>
         )}
       </div>
     </div>

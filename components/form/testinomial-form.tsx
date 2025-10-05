@@ -119,20 +119,18 @@ export default function TestimonialForm() {
 
     try {
       let storageId: string | undefined = undefined;
-      let media_type = "text"
+      let media_type = "text";
       if (values.mediaFile) {
         storageId = await uploadAudioFile(values.mediaFile);
         if (!storageId) {
           throw new Error("Failed to upload audio file");
         }
         if (values.mediaFile.type.startsWith("audio")) {
-          media_type = "audio"
-        }
-        else if (values.mediaFile.type.startsWith("video")) {
-          media_type = "video"
+          media_type = "audio";
+        } else if (values.mediaFile.type.startsWith("video")) {
+          media_type = "video";
         }
       }
-
 
       // Step 3: Save testimonial data with storage ID
       const id = await postTestimonial({
@@ -236,7 +234,7 @@ export default function TestimonialForm() {
             <TabsContent value="video">
               <FormField
                 control={form.control}
-                name="audioFile"
+                name="mediaFile"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Video Testimonial</FormLabel>

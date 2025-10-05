@@ -71,11 +71,11 @@ export function Testimonials() {
                   </CardContent>
                 </Card>
               </Link>
-              <div className="flex flex-col items-end ml-4">
+              <div className="ml-4   grid grid-rows-2 gap-2 self-stretch">
                 {testimonial.audio && (
                   <a
                     href={`/api/files/download/${encodeURIComponent(testimonial.audio)}`}
-                    className="mt-2 px-3 py-1 border rounded hover:bg-gray-100"
+                    className="mt-2 flex items-center justify-center px-3 py-1 border rounded hover:bg-gray-100"
                   >
                     Download Audio
                   </a>

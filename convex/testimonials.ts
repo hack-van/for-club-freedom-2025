@@ -9,6 +9,7 @@ export const getUrl = query({
     return url; // time-limited URL from Convex
   },
 });
+
 export const getMetadata = query({
   args: {
     storageId: v.id("_storage"),
@@ -17,9 +18,16 @@ export const getMetadata = query({
     return await ctx.db.system.get(args.storageId);
   },
 });
+
 export const getTestimonials = query({
   handler: async (ctx) => {
-    const testimonials = await ctx.db.query("testimonials").collect();
+    const testimonials = await ctx.db
+      .query("testimonials")
+      .filter((q) => q.neq(q.field("title"), undefined))
+      .filter((q) => q.neq(q.field("summary"), undefined))
+      .filter((q) => q.neq(q.field("testimonialText"), undefined))
+      .order("desc")
+      .collect();
 
     const testimonialsWithMedia = await Promise.all(
       testimonials.map(async (testimonial) => {

@@ -4,10 +4,13 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "./ui/card";
 import { formatDistanceToNow } from "date-fns";
+import Link from "next/link";
+import { Button } from "./ui/button";
 
 type Props = {
   testimonial: Doc<"testimonials"> & { mediaUrl?: string | null };
@@ -19,20 +22,33 @@ export function TestimonialCard({ testimonial }: Props) {
   return (
     <Card className="w-full relative">
       <CardHeader>
-        <CardTitle>{testimonial.name}</CardTitle>
-        <CardDescription>
-          {formatDistanceToNow(date, { addSuffix: true })}
-        </CardDescription>
+        <div className="flex justify-between items-start">
+          <Link href={`/testimonials/${testimonial._id}`} className="hover:underline">
+            <CardTitle className="">{testimonial.title}</CardTitle>
+          </Link>
+          <p className="text-xs text-muted-foreground min-w-[150px] text-right">
+            {formatDistanceToNow(date, { addSuffix: true })}
+          </p>
+        </div>
+        <p className="text-sm ">
+          Posted by <strong>{testimonial.name}</strong>
+        </p>
       </CardHeader>
       <CardContent className="space-y-4">
-        <h3 className="text-lg font-semibold">Title</h3>
         {testimonial.mediaUrl && testimonial.media_type == "audio" && (
-          <audio className="w-full" controls src={testimonial.mediaUrl} />
+          <audio className="w-full " controls src={testimonial.mediaUrl} />
         )}
         {testimonial.mediaUrl && testimonial.media_type == "video" && (
-          <video className="w-full" controls src={testimonial.mediaUrl} />
+          <video className="w-full " controls src={testimonial.mediaUrl} />
         )}
-        <div></div>
+        {!testimonial.mediaUrl && (
+          <p className="text-sm ">{testimonial.testimonialText}</p>
+        )}
+        {testimonial.media_type !== "text" && (
+          <CardDescription className="text-xs text-muted-foreground">
+            {testimonial.summary}
+          </CardDescription>
+        )}
       </CardContent>
     </Card>
   );

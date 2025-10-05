@@ -8,13 +8,13 @@ export default function TestimonialsPage() {
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-balance">
             What Our Volunteers Say
           </h2>
-          <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-pretty">
+          <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
             Don't just take our word for it. Here's what real volunteers have to
             say about their experience.
           </p>
         </div>
       </div>
-      <div className="w-full space-y-4 max-w-lg mx-auto">
+      <div className="w-full space-y-8 max-w-lg mx-auto pb-24">
         <Testimonials />
       </div>
     </main>

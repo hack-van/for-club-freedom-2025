@@ -19,7 +19,6 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Spinner } from "../ui/spinner";
 import { toast } from "sonner";
-import UploadPreview from "../upload-preview";
 import dynamic from "next/dynamic";
 import { Mic, Video } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -92,7 +91,7 @@ export default function TestimonialForm() {
   const generateUploadUrl = useMutation(api.testimonials.generateUploadUrl);
   const postTestimonial = useMutation(api.testimonials.postTestimonial);
 
-  const [tabValue, setTabValue] = useState("text");
+  const [tabValue, setTabValue] = useState("video");
 
   const handleTabChange = (value: string) => {
     setTabValue(value);
@@ -194,9 +193,9 @@ export default function TestimonialForm() {
             onValueChange={handleTabChange}
           >
             <TabsList>
-              <TabsTrigger value="text">Text</TabsTrigger>
-              <TabsTrigger value="audio">Audio</TabsTrigger>
               <TabsTrigger value="video">Video</TabsTrigger>
+              <TabsTrigger value="audio">Audio</TabsTrigger>
+              <TabsTrigger value="text">Text</TabsTrigger>
             </TabsList>
             <TabsContent value="text">
               <FormField

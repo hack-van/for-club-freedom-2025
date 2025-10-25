@@ -3,7 +3,6 @@
 import { ReactMediaRecorder } from "react-media-recorder";
 import { Button } from "./ui/button";
 import { Square, Video } from "lucide-react";
-import { useRef, useState } from "react";
 import TimeElapsed from "./time-elapsed";
 
 type Props = {
@@ -11,9 +10,6 @@ type Props = {
 };
 
 export default function VideoRecorder({ onRecordingComplete }: Props) {
-  const [elapsed, setElapsed] = useState(0);
-  const intervalRef = useRef<NodeJS.Timeout>(null);
-
   return (
     <ReactMediaRecorder
       video
@@ -21,17 +17,7 @@ export default function VideoRecorder({ onRecordingComplete }: Props) {
       blobPropertyBag={{
         type: "video/mp4",
       }}
-      onStart={() => {
-        setElapsed(0);
-        intervalRef.current = setInterval(() => {
-          setElapsed((prev) => prev + 1);
-        }, 1000);
-      }}
       onStop={(_, blob) => {
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
-        }
         const videoFile = new File(
           [blob],
           `video-recording-${Date.now()}.mp4`,
@@ -58,7 +44,7 @@ export default function VideoRecorder({ onRecordingComplete }: Props) {
             {isRecording && previewStream && (
               <div className="relative">
                 <TimeElapsed
-                  seconds={elapsed}
+                  isRecording={isRecording}
                   className="absolute top-2 left-2"
                 />
                 <video

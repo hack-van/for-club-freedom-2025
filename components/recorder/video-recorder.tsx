@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactMediaRecorder } from "react-media-recorder";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { Square, Video } from "lucide-react";
 import TimeElapsed from "./time-elapsed";
 

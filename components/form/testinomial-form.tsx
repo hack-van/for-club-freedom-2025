@@ -27,7 +27,7 @@ import { Textarea } from "../ui/textarea";
 import { useState } from "react";
 
 // Dynamic import with SSR disabled
-const AudioRecorder = dynamic(() => import("../audio-recorder"), {
+const AudioRecorder = dynamic(() => import("../recorder/audio-recorder"), {
   ssr: false,
   loading: () => (
     <div className="flex flex-col p-4 border items-center rounded-lg gap-4">
@@ -39,7 +39,7 @@ const AudioRecorder = dynamic(() => import("../audio-recorder"), {
   ),
 });
 
-const VideoRecorder = dynamic(() => import("../video-recorder"), {
+const VideoRecorder = dynamic(() => import("../recorder/video-recorder"), {
   ssr: false,
   loading: () => (
     <div className="flex flex-col p-4 border items-center rounded-lg gap-4">

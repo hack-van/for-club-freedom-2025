@@ -1,13 +1,9 @@
 "use client";
 
-import { Button } from "./ui/button";
 import { Mic, Square } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
-import {
-  useReactMediaRecorder,
-  ReactMediaRecorder,
-} from "react-media-recorder";
+import { ReactMediaRecorder } from "react-media-recorder";
 import TimeElapsed from "./time-elapsed";
+import { Button } from "../ui/button";
 
 type Props = {
   onRecordingComplete: (audioFile?: File) => void;

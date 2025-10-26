@@ -117,8 +117,6 @@ export default function TestimonialForm() {
     form.watch("mediaFile") == null && form.watch("writtenText") === "";
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-
     try {
       let storageId: string | undefined = undefined;
       let media_type = "text";
@@ -237,9 +235,7 @@ export default function TestimonialForm() {
                     <FormControl>
                       <AudioRecorder
                         onRecordingComplete={(mediaFile) => {
-                          // Update the form
                           field.onChange(mediaFile);
-                          console.log("Recorded audio file:", mediaFile);
                         }}
                       />
                     </FormControl>
@@ -262,9 +258,7 @@ export default function TestimonialForm() {
                     <FormControl>
                       <VideoRecorder
                         onRecordingComplete={(videoFile) => {
-                          // Update the form
                           field.onChange(videoFile);
-                          console.log("Recorded video file:", videoFile);
                         }}
                       />
                     </FormControl>

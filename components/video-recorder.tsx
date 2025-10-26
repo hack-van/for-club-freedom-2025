@@ -34,9 +34,28 @@ export default function VideoRecorder({ onRecordingComplete }: Props) {
         mediaBlobUrl,
         clearBlobUrl,
         previewStream,
+        error,
       }) => {
         const isRecording = status === "recording";
-        console.log("Rendering VideoRecorder, status:", status);
+
+        // Show error message for insecure contexts
+        if (error || status === "permission_denied") {
+          return (
+            <div className="flex flex-col p-4 border items-center rounded-lg gap-4 w-full">
+              <div className="text-center text-red-600">
+                <p className="font-semibold">
+                  Camera access denied or unavailable
+                </p>
+                <p className="text-sm mt-2">
+                  {window.location.protocol === "http:" &&
+                  !window.location.hostname.includes("localhost")
+                    ? "Camera access requires HTTPS or localhost. Try accessing via localhost or enable HTTPS."
+                    : "Please allow camera access and try again."}
+                </p>
+              </div>
+            </div>
+          );
+        }
 
         return (
           <div className="flex flex-col p-4 border items-center rounded-lg gap-4 w-full">

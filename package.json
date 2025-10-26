@@ -27,6 +27,7 @@
     "convex-helpers": "^0.1.104",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.544.0",
+    "media-chrome": "^4.14.0",
     "mime": "^4.1.0",
     "mime-types": "^3.0.1",
     "next": "15.5.4",

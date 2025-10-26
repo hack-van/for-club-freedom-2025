@@ -4,6 +4,7 @@ import { Mic, Square } from "lucide-react";
 import { ReactMediaRecorder } from "react-media-recorder";
 import TimeElapsed from "./time-elapsed";
 import { Button } from "../ui/button";
+import AudioPlayer from "../media/audio-player";
 
 type Props = {
   onRecordingComplete: (audioFile?: File) => void;
@@ -38,14 +39,7 @@ export default function AudioRecorder({ onRecordingComplete }: Props) {
         return (
           <div className="flex flex-col p-4 border items-center rounded-lg gap-4 w-full">
             {/* Audio Preview */}
-            {!isRecording && mediaBlobUrl && (
-              <audio
-                src={mediaBlobUrl}
-                controls
-                controlsList="nodownload"
-                className="w-full object-cover"
-              />
-            )}
+            {!isRecording && mediaBlobUrl && <AudioPlayer src={mediaBlobUrl} />}
 
             {isRecording && <TimeElapsed isRecording={isRecording} />}
 

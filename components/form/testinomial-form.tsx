@@ -113,6 +113,9 @@ export default function TestimonialForm() {
     return storageId as string;
   };
 
+  const canSwitchTab =
+    form.watch("mediaFile") == null && form.watch("writtenText") === "";
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
 
@@ -178,7 +181,9 @@ export default function TestimonialForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email <small>(optional)</small></FormLabel>
+                <FormLabel>
+                  Email <small>(optional)</small>
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="you@example.com" {...field} />
                 </FormControl>
@@ -193,9 +198,15 @@ export default function TestimonialForm() {
             onValueChange={handleTabChange}
           >
             <TabsList>
-              <TabsTrigger value="video">Video</TabsTrigger>
-              <TabsTrigger value="audio">Audio</TabsTrigger>
-              <TabsTrigger value="text">Text</TabsTrigger>
+              <TabsTrigger value="video" disabled={!canSwitchTab}>
+                Video
+              </TabsTrigger>
+              <TabsTrigger value="audio" disabled={!canSwitchTab}>
+                Audio
+              </TabsTrigger>
+              <TabsTrigger value="text" disabled={!canSwitchTab}>
+                Text
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="text">
               <FormField
@@ -220,7 +231,8 @@ export default function TestimonialForm() {
                   <FormItem>
                     <FormLabel>Audio Testimonial</FormLabel>
                     <FormDescription>
-                      Please find a quiet place to record your audio testimonial.
+                      Please find a quiet place to record your audio
+                      testimonial.
                     </FormDescription>
                     <FormControl>
                       <AudioRecorder
@@ -244,7 +256,8 @@ export default function TestimonialForm() {
                   <FormItem>
                     <FormLabel>Video Testimonial</FormLabel>
                     <FormDescription>
-                      Please find a quiet place to record your video testimonial. 
+                      Please find a quiet place to record your video
+                      testimonial.
                     </FormDescription>
                     <FormControl>
                       <VideoRecorder

@@ -5,6 +5,7 @@ import {
   AudioPlayerContentProps,
   MediaPlayer,
   MediaPlayerControlBar,
+  MediaPlayerFullScreenButton,
   MediaPlayerMuteButton,
   MediaPlayerPlayButton,
   MediaPlayerTimeDisplay,
@@ -20,7 +21,6 @@ export default function AudioPlayer(props: AudioPlayerContentProps) {
         <MediaPlayerPlayButton />
         <MediaPlayerTimeRange />
         <MediaPlayerTimeDisplay showDuration />
-        <MediaPlayerMuteButton />
         <MediaPlayerVolumeRange />
       </MediaPlayerControlBar>
     </MediaPlayer>

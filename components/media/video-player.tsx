@@ -3,7 +3,7 @@
 import {
   MediaPlayer,
   MediaPlayerControlBar,
-  MediaPlayerMuteButton,
+  MediaPlayerFullScreenButton,
   MediaPlayerPlayButton,
   MediaPlayerTimeDisplay,
   MediaPlayerTimeRange,
@@ -15,13 +15,13 @@ import {
 export default function VideoPlayer(props: VideoPlayerContentProps) {
   return (
     <MediaPlayer className="w-full overflow-hidden rounded-lg border">
-      <VideoPlayerContent {...props} slot="media" crossOrigin="" />
+      <VideoPlayerContent {...props} slot="media" crossOrigin="" playsInline />
       <MediaPlayerControlBar className="flex">
         <MediaPlayerPlayButton />
         <MediaPlayerTimeRange />
         <MediaPlayerTimeDisplay showDuration />
-        <MediaPlayerMuteButton />
         <MediaPlayerVolumeRange />
+        <MediaPlayerFullScreenButton />
       </MediaPlayerControlBar>
     </MediaPlayer>
   );

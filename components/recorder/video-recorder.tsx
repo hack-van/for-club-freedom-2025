@@ -4,6 +4,7 @@ import { ReactMediaRecorder } from "react-media-recorder";
 import { Button } from "../ui/button";
 import { Square, Video } from "lucide-react";
 import TimeElapsed from "./time-elapsed";
+import VideoPlayer from "../media/video-player";
 
 type Props = {
   onRecordingComplete: (videoFile?: File) => void;
@@ -81,9 +82,7 @@ export default function VideoRecorder({ onRecordingComplete }: Props) {
             )}
 
             {/* Video Playback */}
-            {!isRecording && mediaBlobUrl && (
-              <video controls src={mediaBlobUrl} className="w-full" />
-            )}
+            {!isRecording && mediaBlobUrl && <VideoPlayer src={mediaBlobUrl} />}
 
             {/* Controls */}
             <div className="flex items-center gap-3">

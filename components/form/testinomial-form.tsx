@@ -25,6 +25,9 @@ import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Textarea } from "../ui/textarea";
 import { useState } from "react";
+import useMobileDetect from "@/hooks/use-mobile-detect";
+import MobileVideoRecorder from "../recorder/mobile-video-recorder";
+import { Testimonial, testimonialSchema } from "@/lib/schema";
 
 // Dynamic import with SSR disabled
 const AudioRecorder = dynamic(() => import("../recorder/audio-recorder"), {
@@ -51,42 +54,13 @@ const VideoRecorder = dynamic(() => import("../recorder/video-recorder"), {
   ),
 });
 
-const formSchema = z
-  .object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    email: z.email("Please enter a valid email address").optional(),
-    mediaFile: z
-      .file({ error: "Please record your audio testimonial" })
-      .optional(),
-    writtenText: z.string(),
-    constent: z.boolean().refine((val) => val === true, {
-      message: "You must agree to the terms",
-    }),
-  })
-  .superRefine((data, ctx) => {
-    if (
-      (!data.writtenText || data.mediaFile) &&
-      (data.writtenText || !data.mediaFile)
-    ) {
-      ctx.addIssue({
-        code: "custom",
-        message: "Please provide your testimonial",
-        path: ["writtenText"],
-      });
-      ctx.addIssue({
-        code: "custom",
-        message: "Please provide an audio testimonial",
-        path: ["mediaFile"],
-      });
-    }
-  });
-
 export default function TestimonialForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<Testimonial>({
+    resolver: zodResolver(testimonialSchema),
     defaultValues: { name: "", writtenText: "", constent: false },
   });
   const router = useRouter();
+  const isMobile = useMobileDetect();
 
   const generateUploadUrl = useMutation(api.testimonials.generateUploadUrl);
   const postTestimonial = useMutation(api.testimonials.postTestimonial);
@@ -116,7 +90,7 @@ export default function TestimonialForm() {
   const canSwitchTab =
     form.watch("mediaFile") == null && form.watch("writtenText") === "";
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: Testimonial) {
     try {
       let storageId: string | undefined = undefined;
       let media_type = "text";
@@ -248,7 +222,7 @@ export default function TestimonialForm() {
               <FormField
                 control={form.control}
                 name="mediaFile"
-                render={({ field }) => (
+                render={(controller) => (
                   <FormItem>
                     <FormLabel>Video Testimonial</FormLabel>
                     <FormDescription>
@@ -256,11 +230,15 @@ export default function TestimonialForm() {
                       testimonial.
                     </FormDescription>
                     <FormControl>
-                      <VideoRecorder
-                        onRecordingComplete={(videoFile) => {
-                          field.onChange(videoFile);
-                        }}
-                      />
+                      {isMobile ? (
+                        <MobileVideoRecorder />
+                      ) : (
+                        <VideoRecorder
+                          onRecordingComplete={(videoFile) => {
+                            controller.field.onChange(videoFile);
+                          }}
+                        />
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>

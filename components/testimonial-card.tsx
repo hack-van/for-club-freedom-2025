@@ -41,10 +41,10 @@ export function TestimonialCard({ testimonial }: Props) {
       </CardHeader>
       <CardContent className="space-y-4">
         {testimonial.mediaUrl && testimonial.media_type == "audio" && (
-          <AudioPlayer src={testimonial.mediaUrl} />
+          <AudioPlayer src={testimonial.mediaUrl} crossOrigin="" />
         )}
         {testimonial.mediaUrl && testimonial.media_type == "video" && (
-          <VideoPlayer src={testimonial.mediaUrl} />
+          <VideoPlayer src={testimonial.mediaUrl} crossOrigin="" />
         )}
         {!testimonial.mediaUrl && testimonial.testimonialText && (
           <TestimonialTextPreview content={testimonial.testimonialText} />

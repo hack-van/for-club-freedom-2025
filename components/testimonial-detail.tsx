@@ -4,7 +4,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { Button } from "@/components/ui/button";
-import { format, formatDistance, formatRelative, subDays } from "date-fns";
+import { formatDistance } from "date-fns";
 import { Spinner } from "@/components/ui/spinner";
 import AudioPlayer from "./media/audio-player";
 import VideoPlayer from "./media/video-player";
@@ -65,25 +65,7 @@ export default function TestimonialDetail({ id }: Props) {
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-2xl font-bold">{testimonial.name}'s Testimonial</h1>
-      {testimonial.mediaUrl && testimonial.media_type == "audio" && (
-        <AudioPlayer src={testimonial.mediaUrl} />
-      )}
-      {testimonial.mediaUrl && testimonial.media_type == "video" && (
-        <VideoPlayer src={testimonial.mediaUrl} preload="auto" />
-      )}
-      <div className="flex gap-2">
-        {testimonial.mediaUrl && (
-          <Button onClick={downloadMedia}>
-            Download {testimonial.media_type == "audio" ? "Audio" : "Video"}
-          </Button>
-        )}
-        <Button onClick={downloadTranscription}>
-          {testimonial.media_id
-            ? "Download Transcription"
-            : "Download Testimonial"}
-        </Button>
-      </div>
+      <h1 className="text-2xl font-bold">{testimonial.title}</h1>
       <div className="space-y-1">
         <h3 className="font-bold">Posted by {testimonial.name}</h3>
         <p className="font-mono text-muted-foreground">
@@ -93,6 +75,24 @@ export default function TestimonialDetail({ id }: Props) {
               })
             : "Date not available"}
         </p>
+      </div>
+      {testimonial.mediaUrl && testimonial.media_type == "audio" && (
+        <AudioPlayer src={testimonial.mediaUrl} crossOrigin="" />
+      )}
+      {testimonial.mediaUrl && testimonial.media_type == "video" && (
+        <VideoPlayer src={testimonial.mediaUrl} crossOrigin="" preload="auto" />
+      )}
+      <div className="flex gap-2">
+        {testimonial.mediaUrl && (
+          <Button onClick={downloadMedia} className="cursor-pointer">
+            Download {testimonial.media_type == "audio" ? "Audio" : "Video"}
+          </Button>
+        )}
+        <Button onClick={downloadTranscription} className="cursor-pointer">
+          {testimonial.media_id
+            ? "Download Transcription"
+            : "Download Testimonial"}
+        </Button>
       </div>
       <div className="space-y-0">
         <h3 className="font-bold flex items-center gap-1.5">

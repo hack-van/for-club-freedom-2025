@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { formatDistance } from "date-fns";
 import { Spinner } from "@/components/ui/spinner";
 import { usePathname } from "next/navigation";
+import AudioPlayer from "./media/audio-player";
+import VideoPlayer from "./media/video-player";
 
 type Props = {
   id: Id<"testimonials">;
@@ -37,10 +39,10 @@ export default function TestimonialDetail({ id }: Props) {
     <div className="flex flex-col gap-8">
       <h1 className="text-2xl font-bold">{testimonial.name}'s Testimonial</h1>
       {testimonial.mediaUrl && testimonial.media_type == "audio" && (
-        <audio className="w-full" controls src={testimonial.mediaUrl} />
+        <AudioPlayer src={testimonial.mediaUrl} />
       )}
       {testimonial.mediaUrl && testimonial.media_type == "video" && (
-        <video className="w-full" controls src={testimonial.mediaUrl} />
+        <VideoPlayer src={testimonial.mediaUrl} preload="auto" />
       )}
       <div className="flex gap-2">
         {testimonial.mediaUrl && (

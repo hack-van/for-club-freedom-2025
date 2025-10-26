@@ -12,6 +12,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
+import AudioPlayer from "./media/audio-player";
+import VideoPlayer from "./media/video-player";
 
 type Props = {
   testimonial: Doc<"testimonials"> & { mediaUrl?: string | null };
@@ -39,10 +41,10 @@ export function TestimonialCard({ testimonial }: Props) {
       </CardHeader>
       <CardContent className="space-y-4">
         {testimonial.mediaUrl && testimonial.media_type == "audio" && (
-          <audio className="w-full" controls src={testimonial.mediaUrl} />
+          <AudioPlayer src={testimonial.mediaUrl} />
         )}
         {testimonial.mediaUrl && testimonial.media_type == "video" && (
-          <video className="w-full" controls src={testimonial.mediaUrl} />
+          <VideoPlayer src={testimonial.mediaUrl} />
         )}
         {!testimonial.mediaUrl && testimonial.testimonialText && (
           <TestimonialTextPreview content={testimonial.testimonialText} />

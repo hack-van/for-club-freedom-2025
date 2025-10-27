@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@convex-dev/migrations':
+        specifier: ^0.2.9
+        version: 0.2.9(convex@1.27.3(react@19.1.0))
       '@convex-dev/r2':
         specifier: ^0.7.3
         version: 0.7.3(convex-svelte@0.0.11(convex@1.27.3(react@19.1.0))(svelte@5.42.2))(convex@1.27.3(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(svelte@5.42.2)(typescript@5.9.3)(zod@4.1.11)
@@ -319,6 +322,11 @@ packages:
 
   '@convex-dev/action-retrier@0.2.1':
     resolution: {integrity: sha512-yxc2ECtgFAAync8Yf1ykh1nzgXkXjrCA5mFYB0lRq/Dgx1TFyFuYfw10ECn7v9/aMUjzUpyJEJp9vRscrfFsng==}
+    peerDependencies:
+      convex: ~1.16.5 || >=1.17.0 <1.35.0
+
+  '@convex-dev/migrations@0.2.9':
+    resolution: {integrity: sha512-HfIv6/F8VbtJ1NVT2bQRTumJGdaqROl/+s5IOnubHm7vvgie0RjcfO6YiB7JoLFWwS19vjDQDKl63ihoA08zOA==}
     peerDependencies:
       convex: ~1.16.5 || >=1.17.0 <1.35.0
 
@@ -3240,6 +3248,10 @@ snapshots:
   '@borewit/text-codec@0.1.1': {}
 
   '@convex-dev/action-retrier@0.2.1(convex@1.27.3(react@19.1.0))':
+    dependencies:
+      convex: 1.27.3(react@19.1.0)
+
+  '@convex-dev/migrations@0.2.9(convex@1.27.3(react@19.1.0))':
     dependencies:
       convex: 1.27.3(react@19.1.0)
 

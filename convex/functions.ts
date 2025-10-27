@@ -49,8 +49,8 @@ triggers.register("testimonials", async (ctx, change) => {
 
 // Only trigger when media_id changes
 triggers.register("testimonials", async (ctx, change) => {
-  const oldMediaId = change.oldDoc?.media_id;
-  const mediaId = change.newDoc?.media_id;
+  const oldMediaId = change.oldDoc?.storageId;
+  const mediaId = change.newDoc?.storageId;
 
   if (oldMediaId === mediaId) {
     return;
@@ -76,7 +76,7 @@ triggers.register("testimonials", async (ctx, change) => {
   // Schedule transcription as an action (runs in Node.js environment)
   await ctx.scheduler.runAfter(0, api.functions.transcribe, {
     testimonialId: id,
-    mediaUrl: mediaUrl,
+    mediaUrl,
   });
 
   console.log(`Scheduled transcription for testimonial ${id}`);

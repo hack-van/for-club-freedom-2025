@@ -1,7 +1,11 @@
 import { v } from "convex/values";
-import { query } from "./_generated/server";
+import { action, query } from "./_generated/server";
 import { mutation } from "./functions";
 import { r2 } from "./r2";
+import { api } from "./_generated/api";
+import { createR2Client } from "@/lib/r2";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
 
 export const getTestimonials = query({
   args: { searchQuery: v.optional(v.string()) },
@@ -79,6 +83,46 @@ export const getTestimonialById = query({
       ...testimonial,
       mediaUrl,
     };
+  },
+});
+
+export const generateMediaDownloadUrl = action({
+  args: { id: v.id("testimonials") },
+  handler: async (ctx, { id }) => {
+    const testimonial = await ctx.runQuery(
+      api.testimonials.getTestimonialById,
+      { id }
+    );
+
+    if (!testimonial || !testimonial.storageId) {
+      return undefined;
+    }
+
+    const r2Client = createR2Client({
+      accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+      secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+      bucket: process.env.R2_BUCKET!,
+      endpoint: process.env.R2_ENDPOINT!,
+    });
+
+    const fileName = `${Math.floor(testimonial._creationTime)}-${testimonial.name}-${testimonial.storageId}`;
+    const metadata = await r2.getMetadata(ctx, testimonial.storageId);
+
+    console.log("Generating download URL for file:", fileName);
+
+    const url: string = await getSignedUrl(
+      r2Client,
+      new GetObjectCommand({
+        Bucket: process.env.R2_BUCKET!,
+        Key: testimonial.storageId,
+        ResponseContentDisposition: `attachment; filename="${fileName}"`,
+        ResponseContentType:
+          metadata?.contentType || "application/octet-stream",
+      }),
+      { expiresIn: 900 } // URL valid for 15 minutes
+    );
+
+    return url;
   },
 });
 

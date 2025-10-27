@@ -89,7 +89,7 @@ export default function TestimonialForm() {
     defaultValues: { name: "", writtenText: "", constent: false },
   });
   const router = useRouter();
-  const uploadFile = useUploadFile(api.testimonials);
+  const uploadFile = useUploadFile(api.r2);
   const postTestimonial = useMutation(api.testimonials.postTestimonial);
 
   const [tabValue, setTabValue] = useState("text");
@@ -122,7 +122,7 @@ export default function TestimonialForm() {
       const id = await postTestimonial({
         name: values.name,
         email: values.email,
-        media_id: storageId as any,
+        storageId: storageId,
         media_type: media_type,
         text: values.writtenText,
       });
@@ -165,7 +165,9 @@ export default function TestimonialForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email <small>(optional)</small></FormLabel>
+                <FormLabel>
+                  Email <small>(optional)</small>
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="you@example.com" {...field} />
                 </FormControl>
@@ -207,7 +209,8 @@ export default function TestimonialForm() {
                   <FormItem>
                     <FormLabel>Audio Testimonial</FormLabel>
                     <FormDescription>
-                      Please find a quiet place to record your audio testimonial.
+                      Please find a quiet place to record your audio
+                      testimonial.
                     </FormDescription>
                     <FormControl>
                       <AudioRecorder
@@ -231,7 +234,8 @@ export default function TestimonialForm() {
                   <FormItem>
                     <FormLabel>Video Testimonial</FormLabel>
                     <FormDescription>
-                      Please find a quiet place to record your video testimonial. 
+                      Please find a quiet place to record your video
+                      testimonial.
                     </FormDescription>
                     <FormControl>
                       <VideoRecorder

@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Textarea } from "../ui/textarea";
 import { useState } from "react";
+import { useUploadFile } from "@convex-dev/r2/react";
 
 // Dynamic import with SSR disabled
 const AudioRecorder = dynamic(() => import("../audio-recorder"), {
@@ -88,8 +89,7 @@ export default function TestimonialForm() {
     defaultValues: { name: "", writtenText: "", constent: false },
   });
   const router = useRouter();
-
-  const generateUploadUrl = useMutation(api.testimonials.generateUploadUrl);
+  const uploadFile = useUploadFile(api.testimonials);
   const postTestimonial = useMutation(api.testimonials.postTestimonial);
 
   const [tabValue, setTabValue] = useState("text");
@@ -100,20 +100,6 @@ export default function TestimonialForm() {
     form.resetField("writtenText");
   };
 
-  const uploadAudioFile = async (file: File) => {
-    const uploadUrl = await generateUploadUrl();
-    const result = await fetch(uploadUrl, {
-      method: "POST",
-      headers: { "Content-Type": file.type },
-      body: file,
-    });
-    if (!result.ok) {
-      return undefined;
-    }
-    const { storageId } = await result.json();
-    return storageId as string;
-  };
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
 
@@ -121,7 +107,7 @@ export default function TestimonialForm() {
       let storageId: string | undefined = undefined;
       let media_type = "text";
       if (values.mediaFile) {
-        storageId = await uploadAudioFile(values.mediaFile);
+        storageId = await uploadFile(values.mediaFile);
         if (!storageId) {
           throw new Error("Failed to upload audio file");
         }

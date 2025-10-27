@@ -4,7 +4,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { Button } from "@/components/ui/button";
-import { format, formatDistance, formatRelative, subDays } from "date-fns";
+import { formatDistance } from "date-fns";
 import { Spinner } from "@/components/ui/spinner";
 
 type Props = {
@@ -32,7 +32,7 @@ export default function TestimonialDetail({ id }: Props) {
       // Create download link
       const link = document.createElement("a");
       link.href = url;
-      link.download = `${testimonial.name}-${testimonial.createdAt}-testimonial.${
+      link.download = `${testimonial.name}-${testimonial._creationTime}-testimonial.${
         testimonial.media_type === "audio" ? "mp3" : "mp4"
       }`;
       document.body.appendChild(link);
@@ -55,7 +55,7 @@ export default function TestimonialDetail({ id }: Props) {
       { type: "text/plain" }
     );
     element.href = URL.createObjectURL(file);
-    element.download = `${testimonial.name}-${testimonial.createdAt}-transcription.txt`;
+    element.download = `${testimonial.name}-${testimonial._creationTime}-transcription.txt`;
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
@@ -85,8 +85,8 @@ export default function TestimonialDetail({ id }: Props) {
       <div className="space-y-1">
         <h3 className="font-bold">Posted by {testimonial.name}</h3>
         <p className="font-mono text-muted-foreground">
-          {testimonial.createdAt
-            ? formatDistance(testimonial.createdAt, Date.now(), {
+          {testimonial._creationTime
+            ? formatDistance(testimonial._creationTime, Date.now(), {
                 addSuffix: true,
               })
             : "Date not available"}

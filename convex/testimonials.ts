@@ -1,23 +1,12 @@
 import { v } from "convex/values";
 import { query } from "./_generated/server";
 import { mutation } from "./functions";
+import { R2 } from "@convex-dev/r2";
+import { components } from "./_generated/api";
 
-export const getUrl = query({
-  args: { storageId: v.id("_storage") },
-  handler: async (ctx, { storageId }) => {
-    const url = await ctx.storage.getUrl(storageId);
-    return url; // time-limited URL from Convex
-  },
-});
+export const r2 = new R2(components.r2);
 
-export const getMetadata = query({
-  args: {
-    storageId: v.id("_storage"),
-  },
-  handler: async (ctx, args) => {
-    return await ctx.db.system.get(args.storageId);
-  },
-});
+export const { generateUploadUrl, syncMetadata } = r2.clientApi();
 
 export const getTestimonials = query({
   args: { searchQuery: v.optional(v.string()) },
@@ -28,31 +17,29 @@ export const getTestimonials = query({
       // Full-text search path (no filters before withSearchIndex)
       testimonials = await ctx.db
         .query("testimonials")
-        .withSearchIndex("search_posts", q =>
+        .withSearchIndex("search_posts", (q) =>
           q.search("searchText", searchQuery)
         )
         .collect();
 
       // Optional JS-side filtering
       testimonials = testimonials.filter(
-        t => t.title && t.summary && t.testimonialText
+        (t) => t.title && t.summary && t.testimonialText
       );
     } else {
       // Normal query path with filters
       testimonials = await ctx.db
         .query("testimonials")
-        .filter(q => q.neq(q.field("title"), undefined))
-        .filter(q => q.neq(q.field("summary"), undefined))
-        .filter(q => q.neq(q.field("testimonialText"), undefined))
+        .filter((q) => q.neq(q.field("title"), undefined))
+        .filter((q) => q.neq(q.field("summary"), undefined))
+        .filter((q) => q.neq(q.field("testimonialText"), undefined))
         .order("desc")
         .collect();
     }
 
     const testimonialsWithMedia = await Promise.all(
-      testimonials.map(async t => {
-        const mediaUrl = t.media_id
-          ? await ctx.storage.getUrl(t.media_id)
-          : undefined;
+      testimonials.map(async (t) => {
+        const mediaUrl = t.media_id ? await r2.getUrl(t.media_id) : undefined;
         return { ...t, mediaUrl };
       })
     );
@@ -76,7 +63,6 @@ export const postTestimonial = mutation({
       media_id,
       media_type,
       testimonialText: text,
-      createdAt: Date.now(),
     });
     return id;
   },
@@ -91,7 +77,7 @@ export const getTestimonialById = query({
     }
 
     const mediaUrl = testimonial.media_id
-      ? await ctx.storage.getUrl(testimonial.media_id)
+      ? await r2.getUrl(testimonial.media_id)
       : undefined;
     return {
       ...testimonial,
@@ -118,11 +104,5 @@ export const updateSummaryAndTitle = mutation({
   },
   handler: async (ctx, { id, summary, title }) => {
     await ctx.db.patch(id, { summary, title });
-  },
-});
-
-export const generateUploadUrl = mutation({
-  handler: async (ctx) => {
-    return await ctx.storage.generateUploadUrl();
   },
 });

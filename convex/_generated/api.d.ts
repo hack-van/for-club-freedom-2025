@@ -9,7 +9,9 @@
  */
 
 import type * as functions from "../functions.js";
+import type * as internal_r2 from "../internal/r2.js";
 import type * as migrations from "../migrations.js";
+import type * as r2 from "../r2.js";
 import type * as testimonials from "../testimonials.js";
 
 import type {
@@ -28,7 +30,9 @@ import type {
  */
 declare const fullApi: ApiFromModules<{
   functions: typeof functions;
+  "internal/r2": typeof internal_r2;
   migrations: typeof migrations;
+  r2: typeof r2;
   testimonials: typeof testimonials;
 }>;
 declare const fullApiWithMounts: typeof fullApi;

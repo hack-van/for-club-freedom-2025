@@ -51,6 +51,7 @@ export const migrateToR2 = internalAction({
       if (storageId) {
         await ctx.runMutation(api.internal.r2.updateStorageId, {
           testimonialId: media._id,
+          mediaId: media.mediaId,
           storageId,
         });
       }

@@ -25,10 +25,12 @@ export const foundMediaForMigrations = query({
 export const updateStorageId = mutation({
   args: {
     testimonialId: v.id("testimonials"),
+    mediaId: v.id("_storage"),
     storageId: v.string(),
   },
-  async handler(ctx, { testimonialId, storageId }) {
-    await ctx.db.patch(testimonialId, { storageId });
+  async handler(ctx, { testimonialId, mediaId, storageId }) {
+    await ctx.storage.delete(mediaId);
+    await ctx.db.patch(testimonialId, { storageId, media_id: undefined });
   },
 });
 

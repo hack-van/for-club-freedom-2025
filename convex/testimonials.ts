@@ -1,12 +1,7 @@
 import { v } from "convex/values";
 import { query } from "./_generated/server";
 import { mutation } from "./functions";
-import { R2 } from "@convex-dev/r2";
-import { components } from "./_generated/api";
-
-export const r2 = new R2(components.r2);
-
-export const { generateUploadUrl, syncMetadata } = r2.clientApi();
+import { r2 } from "./r2";
 
 export const getTestimonials = query({
   args: { searchQuery: v.optional(v.string()) },

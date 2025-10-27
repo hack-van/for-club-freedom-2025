@@ -15,7 +15,7 @@ import { GeminiResponse, summarize_text } from "@/gemini/summarize_text";
 import { api } from "./_generated/api";
 import { v } from "convex/values";
 import { transcribeAudio } from "@/lib/transcribe";
-import { r2 } from "./testimonials";
+import { r2 } from "./r2";
 
 // start using Triggers, with table types from schema.ts
 const triggers = new Triggers<DataModel>();

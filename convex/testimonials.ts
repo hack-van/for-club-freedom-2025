@@ -98,12 +98,7 @@ export const generateMediaDownloadUrl = action({
       return undefined;
     }
 
-    const r2Client = createR2Client({
-      accessKeyId: process.env.R2_ACCESS_KEY_ID!,
-      secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
-      bucket: process.env.R2_BUCKET!,
-      endpoint: process.env.R2_ENDPOINT!,
-    });
+    const r2Client = createR2Client(r2.config);
 
     const fileName = `${Math.floor(testimonial._creationTime)}-${testimonial.name}-${testimonial.storageId}`;
     const metadata = await r2.getMetadata(ctx, testimonial.storageId);
@@ -113,7 +108,7 @@ export const generateMediaDownloadUrl = action({
     const url: string = await getSignedUrl(
       r2Client,
       new GetObjectCommand({
-        Bucket: process.env.R2_BUCKET!,
+        Bucket: r2.config.bucket,
         Key: testimonial.storageId,
         ResponseContentDisposition: `attachment; filename="${fileName}"`,
         ResponseContentType:

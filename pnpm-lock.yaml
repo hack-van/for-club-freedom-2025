@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@auth/core':
+        specifier: 0.37.0
+        version: 0.37.0
+      '@convex-dev/auth':
+        specifier: ^0.0.90
+        version: 0.0.90(@auth/core@0.37.0)(convex@1.27.3(react@19.1.0))(react@19.1.0)
       '@google/genai':
         specifier: ^1.22.0
         version: 1.22.0
@@ -112,9 +118,34 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
+  '@auth/core@0.37.0':
+    resolution: {integrity: sha512-LybAgfFC5dta3Mu3al0UbnzMGVBpZRqLMvvXupQOfETtPNlL7rXgTO13EVRTCdvPqMQrVYjODUDvgVfQM1M3Qg==}
+    peerDependencies:
+      '@simplewebauthn/browser': ^9.0.1
+      '@simplewebauthn/server': ^9.0.2
+      nodemailer: ^6.8.0
+    peerDependenciesMeta:
+      '@simplewebauthn/browser':
+        optional: true
+      '@simplewebauthn/server':
+        optional: true
+      nodemailer:
+        optional: true
+
   '@babel/runtime@7.28.4':
     resolution: {integrity: sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==}
     engines: {node: '>=6.9.0'}
+
+  '@convex-dev/auth@0.0.90':
+    resolution: {integrity: sha512-aqw88EB042HvnaF4wcf/f/wTocmT2Bus2VDQRuV79cM0+8kORM0ICK/ByZ6XsHgQ9qr6TmidNbXm6QAgndrdpQ==}
+    hasBin: true
+    peerDependencies:
+      '@auth/core': ^0.37.0
+      convex: ^1.17.0
+      react: ^18.2.0 || ^19.0.0-0
+    peerDependenciesMeta:
+      react:
+        optional: true
 
   '@emnapi/runtime@1.5.0':
     resolution: {integrity: sha512-97/BJ3iXHww3djw6hYIfErCZFee7qCtrneuLa20UXFCOTCfBM2cvQHjWJ2EG0s0MtdNwInarqCTz35i4wWXHsQ==}
@@ -650,6 +681,21 @@ packages:
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
+
+  '@oslojs/asn1@1.0.0':
+    resolution: {integrity: sha512-zw/wn0sj0j0QKbIXfIlnEcTviaCzYOY3V5rAyjR6YtOByFtJiT574+8p9Wlach0lZH9fddD4yb9laEAIl4vXQA==}
+
+  '@oslojs/binary@1.0.0':
+    resolution: {integrity: sha512-9RCU6OwXU6p67H4NODbuxv2S3eenuQ4/WFLrsq+K/k682xrznH5EVWA7N4VFk9VYVcbFtKqur5YQQZc0ySGhsQ==}
+
+  '@oslojs/crypto@1.0.1':
+    resolution: {integrity: sha512-7n08G8nWjAr/Yu3vu9zzrd0L9XnrJfpMioQcvCMxBIiF5orECHe5/3J0jmXRVvgfqMm/+4oxlQ+Sq39COYLcNQ==}
+
+  '@oslojs/encoding@1.1.0':
+    resolution: {integrity: sha512-70wQhgYmndg4GCPxPPxPGevRKqTIJ2Nh4OkiMWmDAVYsTQ+Ta7Sq+rPevXyXGdzr30/qZBnyOalCszoMxlyldQ==}
+
+  '@panva/hkdf@1.2.1':
+    resolution: {integrity: sha512-6oclG6Y3PiDFcoyk8srjLfVKyMfVCKJ27JwNPViuXziFpmdz+MZnZN/aKY0JGXgYuO/VghU0jcOAZgWXZ1Dmrw==}
 
   '@radix-ui/number@1.1.1':
     resolution: {integrity: sha512-MkKCwxlXTgz6CFoJx3pCwn07GKp36+aZyu/u2Ln2VrA5DcdyCZkASEDBTd8x5whTQQL5CiYf4prXKLcgQdv29g==}
@@ -1435,6 +1481,9 @@ packages:
   '@tailwindcss/postcss@4.1.14':
     resolution: {integrity: sha512-BdMjIxy7HUNThK87C7BC8I1rE8BVUsfNQSI5siQ4JK3iIa3w0XyVvVL9SXLWO//CtYTcp1v7zci0fYwJOjB+Zg==}
 
+  '@types/cookie@0.6.0':
+    resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
+
   '@types/node@20.19.19':
     resolution: {integrity: sha512-pb1Uqj5WJP7wrcbLU7Ru4QtA0+3kAXrkutGiD26wUKzSMgNNaPARTUDQmElUXp64kh3cWdou3Q0C7qwwxqSFmg==}
 
@@ -1542,6 +1591,14 @@ packages:
         optional: true
       react:
         optional: true
+
+  cookie@0.7.1:
+    resolution: {integrity: sha512-6DnInpx7SJ2AK3+CTUE/ZM0vWTUboZCegxhC2xiIydHR9jNuTAASBrfEpHhiGOZw/nX51bHt6YQl8jsGo4y/0w==}
+    engines: {node: '>= 0.6'}
+
+  cookie@1.0.2:
+    resolution: {integrity: sha512-9Kr/j4O16ISv8zBBhJoi4bXOYNTkFLOqSL3UDB0njXxCXNezjeyVrJyGOWtgfs/q2km1gwBcfH8q1yEGoMYunA==}
+    engines: {node: '>=18'}
 
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
@@ -1715,6 +1772,10 @@ packages:
   indefinite-article@0.0.2:
     resolution: {integrity: sha512-Au/2XzRkvxq2J6w5uvSSbBKPZ5kzINx5F2wb0SF8xpRL8BP9Lav81TnRbfPp6p+SYjYxwaaLn4EUwI3/MmYKSw==}
 
+  is-network-error@1.3.0:
+    resolution: {integrity: sha512-6oIwpsgRfnDiyEDLMay/GqCl3HoAtH5+RUKW29gYkL0QA+ipzpDLA16yQs7/RHCSu+BwgbJaOUqa4A99qNVQVw==}
+    engines: {node: '>=16'}
+
   is-stream@2.0.1:
     resolution: {integrity: sha512-hFoiJiTl63nn+kstHGBtewWSKnQLpyb155KHheA1l39uvtO9nWIop1p3udqPcUd/xbF1VLMO4n7OI6p7RbngDg==}
     engines: {node: '>=8'}
@@ -1722,6 +1783,9 @@ packages:
   jiti@2.6.1:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
+
+  jose@5.10.0:
+    resolution: {integrity: sha512-s+3Al/p9g32Iq+oqXxkW//7jk2Vig6FF1CFqzVXoTUXt2qz89YWbL+OwS17NFYEvxC35n0FKeGO2LGYSxeM2Gg==}
 
   json-bigint@1.0.0:
     resolution: {integrity: sha512-SiPv/8VpZuWbvLSMtTDU8hEfrZWg/mH/nV/b4o0CYbSxu1UIQPLdwKOCIyLQX+VIPO5vrLX3i8qtqFyhdPSUSQ==}
@@ -1799,6 +1863,10 @@ packages:
   lightningcss@1.30.1:
     resolution: {integrity: sha512-xi6IyHML+c9+Q3W0S4fCQJOym42pyurFiJUHEcEyHS0CeKzia4yZDEsLlqOFykxOdHpNy0NmvVO31vcSqAxJCg==}
     engines: {node: '>= 12.0.0'}
+
+  lucia@3.2.2:
+    resolution: {integrity: sha512-P1FlFBGCMPMXu+EGdVD9W4Mjm0DqsusmKgO7Xc33mI5X1bklmsQb0hfzPhXomQr9waWIBDsiOjvr1e6BTaUqpA==}
+    deprecated: This package has been deprecated. Please see https://lucia-auth.com/lucia-v3/migrate.
 
   lucide-react@0.544.0:
     resolution: {integrity: sha512-t5tS44bqd825zAW45UQxpG2CvcC4urOwn2TrwSH8u+MjeE+1NnWl6QqeQ/6NdjMqdOygyiT9p3Ev0p1NJykxjw==}
@@ -1890,6 +1958,12 @@ packages:
       encoding:
         optional: true
 
+  oauth4webapi@3.8.2:
+    resolution: {integrity: sha512-FzZZ+bht5X0FKe7Mwz3DAVAmlH1BV5blSak/lHMBKz0/EBMhX6B10GlQYI51+oRp8ObJaX0g6pXrAxZh5s8rjw==}
+
+  path-to-regexp@6.3.0:
+    resolution: {integrity: sha512-Yhpw4T9C6hPpgPeA28us07OJeqZ5EzQTkbfwuhsUg0c237RomFoETJgmp2sa3F/41gfLE6G5cqcYwznmeEeOlQ==}
+
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
@@ -1901,10 +1975,21 @@ packages:
     resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
     engines: {node: ^10 || ^12 || >=14}
 
+  preact-render-to-string@5.2.3:
+    resolution: {integrity: sha512-aPDxUn5o3GhWdtJtW0svRC2SS/l8D9MAgo2+AWml+BhDImb27ALf04Q2d+AHqUUOc6RdSXFIBVa2gxzgMKgtZA==}
+    peerDependencies:
+      preact: '>=10'
+
+  preact@10.11.3:
+    resolution: {integrity: sha512-eY93IVpod/zG3uMF22Unl8h9KkrcKIRs2EGar8hwLZZDU1lkjph303V9HZBwufh2s736U6VXuhD109LYqPoffg==}
+
   prettier@3.6.2:
     resolution: {integrity: sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ==}
     engines: {node: '>=14'}
     hasBin: true
+
+  pretty-format@3.8.0:
+    resolution: {integrity: sha512-WuxUnVtlWL1OfZFQFuqvnvs6MiAGk9UNsBostyBOB0Is9wb5uRESevA6rnl/rkksXaGX3GzZhPup5d6Vp1nFew==}
 
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
@@ -1992,6 +2077,9 @@ packages:
     resolution: {integrity: sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==}
     engines: {node: '>=10'}
     hasBin: true
+
+  server-only@0.0.1:
+    resolution: {integrity: sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA==}
 
   sharp@0.34.4:
     resolution: {integrity: sha512-FUH39xp3SBPnxWvd5iib1X8XY7J0K0X7d93sie9CJg2PO8/7gmg89Nve6OjItK53/MlAushNNxteBYfM6DEuoA==}
@@ -2126,7 +2214,34 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
+  '@auth/core@0.37.0':
+    dependencies:
+      '@panva/hkdf': 1.2.1
+      '@types/cookie': 0.6.0
+      cookie: 0.7.1
+      jose: 5.10.0
+      oauth4webapi: 3.8.2
+      preact: 10.11.3
+      preact-render-to-string: 5.2.3(preact@10.11.3)
+
   '@babel/runtime@7.28.4': {}
+
+  '@convex-dev/auth@0.0.90(@auth/core@0.37.0)(convex@1.27.3(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@auth/core': 0.37.0
+      '@oslojs/crypto': 1.0.1
+      '@oslojs/encoding': 1.1.0
+      convex: 1.27.3(react@19.1.0)
+      cookie: 1.0.2
+      is-network-error: 1.3.0
+      jose: 5.10.0
+      jwt-decode: 4.0.0
+      lucia: 3.2.2
+      oauth4webapi: 3.8.2
+      path-to-regexp: 6.3.0
+      server-only: 0.0.1
+    optionalDependencies:
+      react: 19.1.0
 
   '@emnapi/runtime@1.5.0':
     dependencies:
@@ -2455,6 +2570,21 @@ snapshots:
 
   '@next/swc-win32-x64-msvc@15.5.4':
     optional: true
+
+  '@oslojs/asn1@1.0.0':
+    dependencies:
+      '@oslojs/binary': 1.0.0
+
+  '@oslojs/binary@1.0.0': {}
+
+  '@oslojs/crypto@1.0.1':
+    dependencies:
+      '@oslojs/asn1': 1.0.0
+      '@oslojs/binary': 1.0.0
+
+  '@oslojs/encoding@1.1.0': {}
+
+  '@panva/hkdf@1.2.1': {}
 
   '@radix-ui/number@1.1.1': {}
 
@@ -3281,6 +3411,8 @@ snapshots:
       postcss: 8.5.6
       tailwindcss: 4.1.14
 
+  '@types/cookie@0.6.0': {}
+
   '@types/node@20.19.19':
     dependencies:
       undici-types: 6.21.0
@@ -3370,6 +3502,10 @@ snapshots:
       prettier: 3.6.2
     optionalDependencies:
       react: 19.1.0
+
+  cookie@0.7.1: {}
+
+  cookie@1.0.2: {}
 
   csstype@3.1.3: {}
 
@@ -3620,9 +3756,13 @@ snapshots:
 
   indefinite-article@0.0.2: {}
 
+  is-network-error@1.3.0: {}
+
   is-stream@2.0.1: {}
 
   jiti@2.6.1: {}
+
+  jose@5.10.0: {}
 
   json-bigint@1.0.0:
     dependencies:
@@ -3685,6 +3825,11 @@ snapshots:
       lightningcss-linux-x64-musl: 1.30.1
       lightningcss-win32-arm64-msvc: 1.30.1
       lightningcss-win32-x64-msvc: 1.30.1
+
+  lucia@3.2.2:
+    dependencies:
+      '@oslojs/crypto': 1.0.1
+      '@oslojs/encoding': 1.1.0
 
   lucide-react@0.544.0(react@19.1.0):
     dependencies:
@@ -3773,6 +3918,10 @@ snapshots:
     dependencies:
       whatwg-url: 5.0.0
 
+  oauth4webapi@3.8.2: {}
+
+  path-to-regexp@6.3.0: {}
+
   picocolors@1.1.1: {}
 
   postcss@8.4.31:
@@ -3787,7 +3936,16 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
+  preact-render-to-string@5.2.3(preact@10.11.3):
+    dependencies:
+      preact: 10.11.3
+      pretty-format: 3.8.0
+
+  preact@10.11.3: {}
+
   prettier@3.6.2: {}
+
+  pretty-format@3.8.0: {}
 
   proxy-from-env@1.1.0: {}
 
@@ -3923,6 +4081,8 @@ snapshots:
 
   semver@7.7.2:
     optional: true
+
+  server-only@0.0.1: {}
 
   sharp@0.34.4:
     dependencies:

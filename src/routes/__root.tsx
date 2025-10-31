@@ -1,12 +1,16 @@
 import {
   Outlet,
-  createRootRoute,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
 import appCss from "../globals.css?url";
+import { QueryClient } from "@tanstack/react-query";
+import { createRootRouteWithContext } from "@tanstack/react-router";
+import Navbar from "@/components/navbar";
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient;
+}>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -29,7 +33,8 @@ function RootLayout() {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="antialiased">
+        <Navbar />
         <Outlet />
         <Scripts />
       </body>

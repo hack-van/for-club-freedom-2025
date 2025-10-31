@@ -10,18 +10,20 @@ type Props = {
 };
 
 export default function AudioRecorder({ onRecordingComplete }: Props) {
+  const mp4Supported = MediaRecorder.isTypeSupported("audio/mp4");
   return (
     <ReactMediaRecorder
       audio
-      blobPropertyBag={{ type: "audio/mpeg" }}
+      blobPropertyBag={{
+        type: mp4Supported ? "audio/mp4" : "audio/webm",
+      }}
+      mediaRecorderOptions={{
+        mimeType: mp4Supported ? "audio/mp4" : "audio/webm",
+      }}
       onStop={(_, blob) => {
-        const audioFile = new File(
-          [blob],
-          `audio-recording-${Date.now()}.mp3`,
-          {
-            type: "audio/mpeg",
-          }
-        );
+        const audioFile = new File([blob], `audio-recording-${Date.now()}`, {
+          type: blob.type ?? "audio/webm",
+        });
         onRecordingComplete(audioFile);
       }}
       render={({

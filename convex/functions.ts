@@ -15,10 +15,10 @@ import { GeminiResponse, summarize_text } from "@/gemini/summarize_text";
 import { api } from "./_generated/api";
 import { v } from "convex/values";
 import { transcribeAudio } from "@/lib/transcribe";
+import { r2 } from "./r2";
 
 // start using Triggers, with table types from schema.ts
 const triggers = new Triggers<DataModel>();
-
 
 triggers.register("testimonials", async (ctx, change) => {
   const oldEmail = change.oldDoc?.email;
@@ -32,7 +32,13 @@ triggers.register("testimonials", async (ctx, change) => {
   const oldTitle = change.oldDoc?.title;
   const title = change.newDoc?.title;
 
-  if (oldEmail === email && oldName === name && oldSummary === summary && oldText === text && oldTitle === title) {
+  if (
+    oldEmail === email &&
+    oldName === name &&
+    oldSummary === summary &&
+    oldText === text &&
+    oldTitle === title
+  ) {
     return;
   }
   const newSearchText = [email, name, summary, text, title].join(" ");
@@ -43,8 +49,8 @@ triggers.register("testimonials", async (ctx, change) => {
 
 // Only trigger when media_id changes
 triggers.register("testimonials", async (ctx, change) => {
-  const oldMediaId = change.oldDoc?.media_id;
-  const mediaId = change.newDoc?.media_id;
+  const oldMediaId = change.oldDoc?.storageId;
+  const mediaId = change.newDoc?.storageId;
 
   if (oldMediaId === mediaId) {
     return;
@@ -58,7 +64,7 @@ triggers.register("testimonials", async (ctx, change) => {
   }
 
   const id = change.id;
-  const mediaUrl = await ctx.storage.getUrl(mediaId);
+  const mediaUrl = await r2.getUrl(mediaId);
 
   if (!mediaUrl) {
     console.log(
@@ -70,7 +76,7 @@ triggers.register("testimonials", async (ctx, change) => {
   // Schedule transcription as an action (runs in Node.js environment)
   await ctx.scheduler.runAfter(0, api.functions.transcribe, {
     testimonialId: id,
-    mediaUrl: mediaUrl,
+    mediaUrl,
   });
 
   console.log(`Scheduled transcription for testimonial ${id}`);
@@ -123,7 +129,7 @@ export const transcribe = action({
         );
         return;
       }
-      
+
       // Update the testimonial with the transcribed text
       await ctx.runMutation(api.testimonials.updateTranscription, {
         id: testimonialId,
@@ -157,9 +163,15 @@ export const summarizeText = action({
   handler: async (ctx, { testimonialId, text }) => {
     console.log("Starting text summarization using Gemini API");
     try {
-      const testimonial = await ctx.runQuery(api.testimonials.getTestimonialById, { id: testimonialId });
-      if (testimonial){
-        const resp: GeminiResponse = await summarize_text(text, testimonial.name);
+      const testimonial = await ctx.runQuery(
+        api.testimonials.getTestimonialById,
+        { id: testimonialId }
+      );
+      if (testimonial) {
+        const resp: GeminiResponse = await summarize_text(
+          text,
+          testimonial.name
+        );
         await ctx.runMutation(api.testimonials.updateSummaryAndTitle, {
           id: testimonialId,
           summary: resp.summary,

@@ -25,13 +25,8 @@ export const generateMediaDownloadUrl = action({
 
     const fileName = `${Math.floor(testimonial._creationTime)}-${testimonial.name}-${testimonial.storageId}`;
     const metadata = await r2.getMetadata(ctx, testimonial.storageId);
-    const extension = getExtension(metadata?.contentType || "");
-
-    const file = extension ? `${fileName}.${extension}` : fileName;
-    console.log("Metadata:", metadata);
-    console.log("Content-Type:", metadata?.contentType);
-    console.log("Extension:", extension);
-    console.log("Generating download URL for file:", file);
+    const extension = getExtension(metadata?.contentType || "") ?? "webm";
+    const file = `${fileName}.${extension}`;
 
     const url: string = await getSignedUrl(
       r2Client,

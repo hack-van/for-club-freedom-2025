@@ -19,7 +19,6 @@ type Props = {
 
 export function TestimonialCard({ testimonial }: Props) {
   const date = new Date(testimonial._creationTime);
-  console.log(date);
   return (
     <Card className="w-full relative">
       <CardHeader>

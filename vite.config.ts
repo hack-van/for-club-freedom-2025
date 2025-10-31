@@ -1,8 +1,8 @@
-import { defineConfig } from 'vite'
-import { tanstackStart } from '@tanstack/react-start/plugin/vite'
-import viteReact from '@vitejs/plugin-react'
-import tsconfigPaths from 'vite-tsconfig-paths'
-import tailwindcss from '@tailwindcss/vite'
+import { defineConfig } from "vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import viteReact from "@vitejs/plugin-react";
+import tsconfigPaths from "vite-tsconfig-paths";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   server: {
@@ -12,12 +12,11 @@ export default defineConfig({
     tailwindcss(),
     tsconfigPaths(),
     tanstackStart({
-      srcDirectory: 'app', // This is the default
+      srcDirectory: "app",
       router: {
-        // Specifies the directory TanStack Router uses for your routes.
-        routesDirectory: 'routes', // Defaults to "routes", relative to srcDirectory
+        routesDirectory: "routes",
       },
     }),
     viteReact(),
   ],
-})
+});

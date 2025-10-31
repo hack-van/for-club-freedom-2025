@@ -28,8 +28,7 @@ import {
   LoadingVideoRecorder,
 } from "../recorder/loading";
 import { ClientOnly, useNavigate } from "@tanstack/react-router";
-import AudioRecorder from "../recorder/audio-recorder";
-import VideoRecorder from "../recorder/video-recorder";
+import { AudioRecorder, VideoRecorder } from "../recorder";
 
 export default function TestimonialForm() {
   const form = useForm<Testimonial>({

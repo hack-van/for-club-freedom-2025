@@ -10,33 +10,77 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TestimonialsIndexRouteImport } from './routes/testimonials/index'
+import { Route as TestimonialsIdIndexRouteImport } from './routes/testimonials/$id/index'
+import { Route as TestimonialsIdMediaDownloadRouteImport } from './routes/testimonials/$id/media-download'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TestimonialsIndexRoute = TestimonialsIndexRouteImport.update({
+  id: '/testimonials/',
+  path: '/testimonials/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestimonialsIdIndexRoute = TestimonialsIdIndexRouteImport.update({
+  id: '/testimonials/$id/',
+  path: '/testimonials/$id/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestimonialsIdMediaDownloadRoute =
+  TestimonialsIdMediaDownloadRouteImport.update({
+    id: '/testimonials/$id/media-download',
+    path: '/testimonials/$id/media-download',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/testimonials': typeof TestimonialsIndexRoute
+  '/testimonials/$id/media-download': typeof TestimonialsIdMediaDownloadRoute
+  '/testimonials/$id': typeof TestimonialsIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/testimonials': typeof TestimonialsIndexRoute
+  '/testimonials/$id/media-download': typeof TestimonialsIdMediaDownloadRoute
+  '/testimonials/$id': typeof TestimonialsIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/testimonials/': typeof TestimonialsIndexRoute
+  '/testimonials/$id/media-download': typeof TestimonialsIdMediaDownloadRoute
+  '/testimonials/$id/': typeof TestimonialsIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/testimonials'
+    | '/testimonials/$id/media-download'
+    | '/testimonials/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/testimonials'
+    | '/testimonials/$id/media-download'
+    | '/testimonials/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/testimonials/'
+    | '/testimonials/$id/media-download'
+    | '/testimonials/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  TestimonialsIndexRoute: typeof TestimonialsIndexRoute
+  TestimonialsIdMediaDownloadRoute: typeof TestimonialsIdMediaDownloadRoute
+  TestimonialsIdIndexRoute: typeof TestimonialsIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +92,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/testimonials/': {
+      id: '/testimonials/'
+      path: '/testimonials'
+      fullPath: '/testimonials'
+      preLoaderRoute: typeof TestimonialsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/testimonials/$id/': {
+      id: '/testimonials/$id/'
+      path: '/testimonials/$id'
+      fullPath: '/testimonials/$id'
+      preLoaderRoute: typeof TestimonialsIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/testimonials/$id/media-download': {
+      id: '/testimonials/$id/media-download'
+      path: '/testimonials/$id/media-download'
+      fullPath: '/testimonials/$id/media-download'
+      preLoaderRoute: typeof TestimonialsIdMediaDownloadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  TestimonialsIndexRoute: TestimonialsIndexRoute,
+  TestimonialsIdMediaDownloadRoute: TestimonialsIdMediaDownloadRoute,
+  TestimonialsIdIndexRoute: TestimonialsIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

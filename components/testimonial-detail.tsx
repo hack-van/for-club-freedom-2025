@@ -1,12 +1,10 @@
-"use client";
-
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { Button } from "@/components/ui/button";
 import { formatDistance } from "date-fns";
 import { Spinner } from "@/components/ui/spinner";
-import { usePathname } from "next/navigation";
+import { Link } from "@tanstack/react-router";
 
 type Props = {
   id: Id<"testimonials">;
@@ -14,7 +12,6 @@ type Props = {
 
 export default function TestimonialDetail({ id }: Props) {
   const testimonial = useQuery(api.testimonials.getTestimonialById, { id });
-  const pathname = usePathname();
 
   if (!testimonial) {
     return <div>Loading testimonial...</div>;
@@ -45,9 +42,13 @@ export default function TestimonialDetail({ id }: Props) {
       <div className="flex gap-2">
         {testimonial.mediaUrl && (
           <Button asChild>
-            <a href={`${pathname}/download-media`} target="_blank">
+            <Link
+              to="/testimonials/$id/media-download"
+              params={{ id }}
+              target="_blank"
+            >
               Download {testimonial.media_type == "audio" ? "Audio" : "Video"}
-            </a>
+            </Link>
           </Button>
         )}
         <Button

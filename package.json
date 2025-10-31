@@ -44,6 +44,9 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@fontsource-variable/open-sans": "^5.2.7",
+    "@fontsource-variable/roboto-mono": "^5.2.8",
+    "@fontsource/open-sans": "^5.2.7",
     "@tailwindcss/postcss": "^4.1.16",
     "@tailwindcss/vite": "^4.1.16",
     "@types/mime-types": "^3.0.1",

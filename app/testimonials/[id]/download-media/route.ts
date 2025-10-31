@@ -7,7 +7,7 @@ export async function GET(
   ctx: RouteContext<"/testimonials/[id]/download-media">
 ) {
   const { id } = await ctx.params;
-  const url = await fetchAction(api.testimonials.generateMediaDownloadUrl, {
+  const url = await fetchAction(api.media.generateMediaDownloadUrl, {
     id,
   } as { id: Id<"testimonials"> });
 

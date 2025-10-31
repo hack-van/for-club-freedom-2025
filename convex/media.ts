@@ -1,0 +1,49 @@
+"use node";
+
+import { extension as getExtension } from "mime-types";
+import { createR2Client } from "@/lib/r2";
+import { action } from "./_generated/server";
+import { v } from "convex/values";
+import { api } from "./_generated/api";
+import { r2 } from "./r2";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+
+export const generateMediaDownloadUrl = action({
+  args: { id: v.id("testimonials") },
+  handler: async (ctx, { id }) => {
+    const testimonial = await ctx.runQuery(
+      api.testimonials.getTestimonialById,
+      { id }
+    );
+
+    if (!testimonial || !testimonial.storageId) {
+      return undefined;
+    }
+
+    const r2Client = createR2Client(r2.config);
+
+    const fileName = `${Math.floor(testimonial._creationTime)}-${testimonial.name}-${testimonial.storageId}`;
+    const metadata = await r2.getMetadata(ctx, testimonial.storageId);
+    const extension = getExtension(metadata?.contentType || "");
+
+    const file = extension ? `${fileName}.${extension}` : fileName;
+    console.log("Metadata:", metadata);
+    console.log("Content-Type:", metadata?.contentType);
+    console.log("Extension:", extension);
+    console.log("Generating download URL for file:", file);
+
+    const url: string = await getSignedUrl(
+      r2Client,
+      new GetObjectCommand({
+        Bucket: r2.config.bucket,
+        Key: testimonial.storageId,
+        ResponseContentDisposition: `attachment; filename="${file}"`,
+        ResponseContentType: metadata?.contentType,
+      }),
+      { expiresIn: 900 } // URL valid for 15 minutes
+    );
+
+    return url;
+  },
+});

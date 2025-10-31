@@ -1,5 +1,3 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -18,48 +16,27 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Spinner } from "../ui/spinner";
 import { toast } from "sonner";
-import dynamic from "next/dynamic";
-import { Mic, Video } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Textarea } from "../ui/textarea";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useUploadFile } from "@convex-dev/r2/react";
 import useMobileDetect from "@/hooks/use-mobile-detect";
 import MobileVideoRecorder from "../recorder/mobile-video-recorder";
 import { Testimonial, testimonialSchema } from "@/lib/schema";
-
-// Dynamic import with SSR disabled
-const AudioRecorder = dynamic(() => import("../recorder/audio-recorder"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex flex-col p-4 border items-center rounded-lg gap-4">
-      <Button size="icon" className="size-12 rounded-full" disabled>
-        <Mic className="size-6" />
-      </Button>
-      <div className="text-sm font-medium">Loading recorder...</div>
-    </div>
-  ),
-});
-
-const VideoRecorder = dynamic(() => import("../recorder/video-recorder"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex flex-col p-4 border items-center rounded-lg gap-4">
-      <Button size="icon" className="size-12 rounded-full" disabled>
-        <Video className="size-6" />
-      </Button>
-      <div className="text-sm font-medium">Loading recorder...</div>
-    </div>
-  ),
-});
+import {
+  LoadingAudioRecorder,
+  LoadingVideoRecorder,
+} from "../recorder/loading";
+import { ClientOnly, useNavigate } from "@tanstack/react-router";
+import AudioRecorder from "../recorder/audio-recorder";
+import VideoRecorder from "../recorder/video-recorder";
 
 export default function TestimonialForm() {
   const form = useForm<Testimonial>({
     resolver: zodResolver(testimonialSchema),
     defaultValues: { name: "", writtenText: "", constent: false },
   });
-  const router = useRouter();
+  const navigation = useNavigate();
   const uploadFile = useUploadFile(api.r2);
   const isMobile = useMobileDetect();
   const postTestimonial = useMutation(api.testimonials.postTestimonial);
@@ -104,7 +81,7 @@ export default function TestimonialForm() {
         description: "Thank you for your submission.",
       });
       form.reset();
-      router.push(`/testimonials/${id}`);
+      // router.push(`/testimonials/${id}`);
     } catch (error) {
       console.error("Error submitting testimonial:", error);
       toast.error("Failed to submit testimonial", {
@@ -192,11 +169,13 @@ export default function TestimonialForm() {
                       testimonial.
                     </FormDescription>
                     <FormControl>
-                      <AudioRecorder
-                        onRecordingComplete={(mediaFile) => {
-                          field.onChange(mediaFile);
-                        }}
-                      />
+                      <ClientOnly fallback={<LoadingAudioRecorder />}>
+                        <AudioRecorder
+                          onRecordingComplete={(mediaFile) => {
+                            field.onChange(mediaFile);
+                          }}
+                        />
+                      </ClientOnly>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -218,11 +197,13 @@ export default function TestimonialForm() {
                       {isMobile ? (
                         <MobileVideoRecorder />
                       ) : (
-                        <VideoRecorder
-                          onRecordingComplete={(videoFile) => {
-                            controller.field.onChange(videoFile);
-                          }}
-                        />
+                        <ClientOnly fallback={<LoadingVideoRecorder />}>
+                          <VideoRecorder
+                            onRecordingComplete={(videoFile) => {
+                              controller.field.onChange(videoFile);
+                            }}
+                          />
+                        </ClientOnly>
                       )}
                     </FormControl>
                     <FormMessage />

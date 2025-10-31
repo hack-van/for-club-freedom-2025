@@ -37,8 +37,14 @@ yarn-error.log*
 # vercel
 .vercel
 
+# builds
+dist
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
 certificates
+
+# tanstack
+.tanstack

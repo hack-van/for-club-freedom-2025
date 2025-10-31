@@ -5,9 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "dev:https": "next dev --turbopack --experimental-https",
-    "build": "next build --turbopack",
-    "start": "next start",
+    "build": "vite build",
     "run_in_isolation": "tsx"
   },
   "dependencies": {

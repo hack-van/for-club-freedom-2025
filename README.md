@@ -20,6 +20,20 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+### Development with HTTPS
+
+Make sure you have [mkcert](https://github.com/FiloSottile/mkcert) installed to create a local CA and generate locally trusted certificates.
+
+Then run the development server with HTTPS. If you are in Windows, use administrator mode
+
+```bash
+pnpm dev:https
+```
+
+Open [https://localhost:3000](https://localhost:3000) with your browser to see the result.
+
+Or you can access the server with your local network IP address, e.g. `https://<your-local-ip>:3000`.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

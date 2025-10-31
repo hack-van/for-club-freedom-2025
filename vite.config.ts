@@ -12,7 +12,7 @@ export default defineConfig({
     tailwindcss(),
     tsconfigPaths(),
     tanstackStart({
-      srcDirectory: 'src', // This is the default
+      srcDirectory: 'app', // This is the default
       router: {
         // Specifies the directory TanStack Router uses for your routes.
         routesDirectory: 'routes', // Defaults to "routes", relative to srcDirectory

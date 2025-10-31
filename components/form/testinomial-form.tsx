@@ -19,16 +19,18 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Spinner } from "../ui/spinner";
 import { toast } from "sonner";
-import UploadPreview from "../upload-preview";
 import dynamic from "next/dynamic";
 import { Mic, Video } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Textarea } from "../ui/textarea";
 import { useState } from "react";
+import useMobileDetect from "@/hooks/use-mobile-detect";
+import MobileVideoRecorder from "../recorder/mobile-video-recorder";
+import { Testimonial, testimonialSchema } from "@/lib/schema";
 
 // Dynamic import with SSR disabled
-const AudioRecorder = dynamic(() => import("../audio-recorder"), {
+const AudioRecorder = dynamic(() => import("../recorder/audio-recorder"), {
   ssr: false,
   loading: () => (
     <div className="flex flex-col p-4 border items-center rounded-lg gap-4">
@@ -40,7 +42,7 @@ const AudioRecorder = dynamic(() => import("../audio-recorder"), {
   ),
 });
 
-const VideoRecorder = dynamic(() => import("../video-recorder"), {
+const VideoRecorder = dynamic(() => import("../recorder/video-recorder"), {
   ssr: false,
   loading: () => (
     <div className="flex flex-col p-4 border items-center rounded-lg gap-4">
@@ -52,47 +54,18 @@ const VideoRecorder = dynamic(() => import("../video-recorder"), {
   ),
 });
 
-const formSchema = z
-  .object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    email: z.email("Please enter a valid email address").optional(),
-    mediaFile: z
-      .file({ error: "Please record your audio testimonial" })
-      .optional(),
-    writtenText: z.string(),
-    constent: z.boolean().refine((val) => val === true, {
-      message: "You must agree to the terms",
-    }),
-  })
-  .superRefine((data, ctx) => {
-    if (
-      (!data.writtenText || data.mediaFile) &&
-      (data.writtenText || !data.mediaFile)
-    ) {
-      ctx.addIssue({
-        code: "custom",
-        message: "Please provide your testimonial",
-        path: ["writtenText"],
-      });
-      ctx.addIssue({
-        code: "custom",
-        message: "Please provide an audio testimonial",
-        path: ["mediaFile"],
-      });
-    }
-  });
-
 export default function TestimonialForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<Testimonial>({
+    resolver: zodResolver(testimonialSchema),
     defaultValues: { name: "", writtenText: "", constent: false },
   });
   const router = useRouter();
+  const isMobile = useMobileDetect();
 
   const generateUploadUrl = useMutation(api.testimonials.generateUploadUrl);
   const postTestimonial = useMutation(api.testimonials.postTestimonial);
 
-  const [tabValue, setTabValue] = useState("text");
+  const [tabValue, setTabValue] = useState("video");
 
   const handleTabChange = (value: string) => {
     setTabValue(value);
@@ -114,9 +87,10 @@ export default function TestimonialForm() {
     return storageId as string;
   };
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  const canSwitchTab =
+    form.watch("mediaFile") == null && form.watch("writtenText") === "";
 
+  async function onSubmit(values: Testimonial) {
     try {
       let storageId: string | undefined = undefined;
       let media_type = "text";
@@ -179,7 +153,9 @@ export default function TestimonialForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email <small>(optional)</small></FormLabel>
+                <FormLabel>
+                  Email <small>(optional)</small>
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="you@example.com" {...field} />
                 </FormControl>
@@ -194,9 +170,15 @@ export default function TestimonialForm() {
             onValueChange={handleTabChange}
           >
             <TabsList>
-              <TabsTrigger value="text">Text</TabsTrigger>
-              <TabsTrigger value="audio">Audio</TabsTrigger>
-              <TabsTrigger value="video">Video</TabsTrigger>
+              <TabsTrigger value="video" disabled={!canSwitchTab}>
+                Video
+              </TabsTrigger>
+              <TabsTrigger value="audio" disabled={!canSwitchTab}>
+                Audio
+              </TabsTrigger>
+              <TabsTrigger value="text" disabled={!canSwitchTab}>
+                Text
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="text">
               <FormField
@@ -221,14 +203,13 @@ export default function TestimonialForm() {
                   <FormItem>
                     <FormLabel>Audio Testimonial</FormLabel>
                     <FormDescription>
-                      Please find a quiet place to record your audio testimonial.
+                      Please find a quiet place to record your audio
+                      testimonial.
                     </FormDescription>
                     <FormControl>
                       <AudioRecorder
                         onRecordingComplete={(mediaFile) => {
-                          // Update the form
                           field.onChange(mediaFile);
-                          console.log("Recorded audio file:", mediaFile);
                         }}
                       />
                     </FormControl>
@@ -241,20 +222,23 @@ export default function TestimonialForm() {
               <FormField
                 control={form.control}
                 name="mediaFile"
-                render={({ field }) => (
+                render={(controller) => (
                   <FormItem>
                     <FormLabel>Video Testimonial</FormLabel>
                     <FormDescription>
-                      Please find a quiet place to record your video testimonial. 
+                      Please find a quiet place to record your video
+                      testimonial.
                     </FormDescription>
                     <FormControl>
-                      <VideoRecorder
-                        onRecordingComplete={(videoFile) => {
-                          // Update the form
-                          field.onChange(videoFile);
-                          console.log("Recorded video file:", videoFile);
-                        }}
-                      />
+                      {isMobile ? (
+                        <MobileVideoRecorder />
+                      ) : (
+                        <VideoRecorder
+                          onRecordingComplete={(videoFile) => {
+                            controller.field.onChange(videoFile);
+                          }}
+                        />
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>

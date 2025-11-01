@@ -20,12 +20,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${openSans.className} antialiased`}>
-        <Navbar />
-        <ConvexClientProvider>{children}</ConvexClientProvider>
-        <Toaster position="bottom-center" richColors />
-      </body>
-    </html>
+      <html lang="en">
+        <body className={`${openSans.className} antialiased`}>
+          <Navbar />
+          <ConvexClientProvider>{children}</ConvexClientProvider>
+          <Toaster position="bottom-center" richColors />
+        </body>
+      </html>
   );
 }

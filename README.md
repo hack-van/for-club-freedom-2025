@@ -20,6 +20,16 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Setting up Convex Auth in your environment
+
+Follow the instructions in this [link](https://labs.convex.dev/auth/setup).
+
+We are using [Resend](https://resend.com) as our email provider. You have to:
+
+1. Register a resend account
+2. Get an API key
+3. Verify your domain.
+
 ### Development with HTTPS
 
 Make sure you have [mkcert](https://github.com/FiloSottile/mkcert) installed to create a local CA and generate locally trusted certificates.

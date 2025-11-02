@@ -22,8 +22,10 @@ export default function RootLayout({
   return (
       <html lang="en">
         <body className={`${openSans.className} antialiased`}>
-          <Navbar />
-          <ConvexClientProvider>{children}</ConvexClientProvider>
+          <ConvexClientProvider>
+            <Navbar />
+            {children}
+          </ConvexClientProvider>
           <Toaster position="bottom-center" richColors />
         </body>
       </html>

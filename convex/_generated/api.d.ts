@@ -17,7 +17,9 @@ import type * as ResendOTP from "../ResendOTP.js";
 import type * as auth from "../auth.js";
 import type * as functions from "../functions.js";
 import type * as http from "../http.js";
+import type * as lib_permissions from "../lib/permissions.js";
 import type * as testimonials from "../testimonials.js";
+import type * as users from "../users.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -32,7 +34,9 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   functions: typeof functions;
   http: typeof http;
+  "lib/permissions": typeof lib_permissions;
   testimonials: typeof testimonials;
+  users: typeof users;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

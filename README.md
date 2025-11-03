@@ -47,40 +47,25 @@ pnpm install
 
 3. Set up environment variables (see Environment Variables section below)
 
-4. Run the development server:
+4. Set up local domains and HTTPS (see Local Domains and HTTPS Setup section below)
+
+5. Run the development server:
 
 ```bash
 pnpm dev
 ```
 
-5. In a separate terminal, start the Convex development server:
+6. In a separate terminal, start the Convex development server:
 
 ```bash
 pnpm convex dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [https://localhost:3000](https://localhost:3000) with your browser to see the result.
 
 ### Set up R2 for Convex
 
 To set up R2 for Convex, follow the instructions in the *Cloudflare Account* section in the [Convex R2 documentation](https://www.convex.dev/components/cloudflare-r2#cloudflare-account).
-
-
-### Development with HTTPS
-
-Make sure you have [mkcert](https://github.com/FiloSottile/mkcert) installed to create a local CA and generate locally trusted certificates.
-
-Then run the development server with HTTPS. If you are in Windows, use administrator mode
-
-```bash
-pnpm dev:https
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
 
 ## Environment Variables
 
@@ -99,6 +84,37 @@ R2_BUCKET_NAME=<your-bucket-name>
 
 # Google Gemini
 GOOGLE_GEMINI_API_KEY=<your-gemini-api-key>
+```
+
+## Local Domains and HTTPS Setup
+
+### Local domain setup
+
+Add the following line to your `/etc/hosts` file (in Linux/MacOS) or `C:\Windows\System32\drivers\etc\hosts` file (in Windows):
+
+```
+127.0.0.1 club-freedom.local
+127.0.0.1 admin.club-freedom.local
+```
+
+Then flush your DNS cache:
+
+```bash
+# MacOS
+sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+
+# Windows
+ipconfig /flushdns
+```
+
+### SSL certificate generation
+
+Make sure you have [mkcert](https://github.com/FiloSottile/mkcert) installed for generating local SSL certificates. Then run the following commands:
+
+```bash
+mkdir -p ./certificates
+mkcert -cert-file ./certificates/dev.pem -key-file ./certificates/dev-key.pem \
+  "*.club-freedom.local" club-freedom.local admin.club-freedom.local localhost 127.0.0.1
 ```
 
 ## Project Structure

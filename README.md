@@ -24,11 +24,16 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 Follow the instructions in this [link](https://labs.convex.dev/auth/setup).
 
+1. Ensure @convex-dev/auth @auth/core@0.37.0 is installed.
+2. Go to the [Manual Setup](https://labs.convex.dev/auth/setup/manual) page and follow steps 1 and 2 of it to ensure you have the proper environment variables set up in your convex environment.
+
 We are using [Resend](https://resend.com) as our email provider. You have to:
 
 1. Register a resend account
 2. Get an API key
 3. Verify your domain.
+
+We will need an official verified domain if we want our emails to not go to the spam folder.
 
 ### Development with HTTPS
 
@@ -93,3 +98,11 @@ pnpm convex dev
 ## Run any .ts file in isolation
 
 `pnpm run_in_isolation -- path/to/your/file.ts`
+
+## Convex Migrations
+
+See this [migration](https://www.convex.dev/components/migrations) page for more details.
+
+To run a single migration, use the following command:
+
+`pnpx convex run migrations:run '{fn: "migrations:yourMigrationName"}'`

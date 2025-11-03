@@ -26,6 +26,7 @@ export default defineSchema({
     testimonialText: v.optional(v.string()), // Text version of the testimonial
     summary: v.optional(v.string()), // Summary of the testimonial
     searchText: v.optional(v.string()), // Field for full-text search indexing
+    approved: v.optional(v.boolean()), // Whether the testimonial is approved for display
   }).searchIndex("search_posts", {
     searchField: "searchText",
   }),

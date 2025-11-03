@@ -18,16 +18,12 @@ import { Spinner } from "../ui/spinner";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Textarea } from "../ui/textarea";
-import { lazy, Suspense, useState } from "react";
+import { useState } from "react";
 import { useUploadFile } from "@convex-dev/r2/react";
 import useMobileDetect from "@/hooks/use-mobile-detect";
 import MobileVideoRecorder from "../recorder/mobile-video-recorder";
 import { Testimonial, testimonialSchema } from "@/lib/schema";
-import {
-  LoadingAudioRecorder,
-  LoadingVideoRecorder,
-} from "../recorder/loading";
-import { ClientOnly, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { AudioRecorder, VideoRecorder } from "../recorder";
 
 export default function TestimonialForm() {
@@ -80,7 +76,7 @@ export default function TestimonialForm() {
         description: "Thank you for your submission.",
       });
       form.reset();
-      // router.push(`/testimonials/${id}`);
+      navigation({ to: "/testimonials/$id", params: { id } });
     } catch (error) {
       console.error("Error submitting testimonial:", error);
       toast.error("Failed to submit testimonial", {
@@ -168,13 +164,11 @@ export default function TestimonialForm() {
                       testimonial.
                     </FormDescription>
                     <FormControl>
-                      <ClientOnly fallback={<LoadingAudioRecorder />}>
-                        <AudioRecorder
-                          onRecordingComplete={(mediaFile) => {
-                            field.onChange(mediaFile);
-                          }}
-                        />
-                      </ClientOnly>
+                      <AudioRecorder
+                        onRecordingComplete={(mediaFile) => {
+                          field.onChange(mediaFile);
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -196,13 +190,11 @@ export default function TestimonialForm() {
                       {isMobile ? (
                         <MobileVideoRecorder />
                       ) : (
-                        <ClientOnly fallback={<LoadingVideoRecorder />}>
-                          <VideoRecorder
-                            onRecordingComplete={(videoFile) => {
-                              controller.field.onChange(videoFile);
-                            }}
-                          />
-                        </ClientOnly>
+                        <VideoRecorder
+                          onRecordingComplete={(videoFile) => {
+                            controller.field.onChange(videoFile);
+                          }}
+                        />
                       )}
                     </FormControl>
                     <FormMessage />

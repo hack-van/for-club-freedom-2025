@@ -25,6 +25,24 @@ export function getRouter() {
   const router = routerWithQueryClient(
     createRouter({
       routeTree,
+      rewrite: {
+        input: ({ url }) => {
+          // Map admin.domain.com to /admin path
+          if (url.hostname.startsWith("admin.")) {
+            url.pathname = `/admin${url.pathname}`;
+            return url;
+          }
+          return undefined;
+        },
+        output: ({ url }) => {
+          // Reverse mapping for link generation
+          if (url.pathname.startsWith("/admin/")) {
+            url.pathname = url.pathname.replace("/admin/", "/");
+            return url;
+          }
+          return undefined;
+        },
+      },
       defaultPreload: "intent",
       context: { queryClient },
       scrollRestoration: true,
@@ -34,7 +52,7 @@ export function getRouter() {
         </ConvexProvider>
       ),
     }),
-    queryClient,
+    queryClient
   );
 
   return router;

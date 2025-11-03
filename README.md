@@ -1,17 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Club Freedom Testimonial Platform
+
+A modern testimonial collection platform built for Club Freedom, allowing users to share their experiences through text, audio, or video recordings.
+
+## Tech Stack
+
+- **Frontend Framework**: [React 19](https://react.dev/) with [Vite](https://vite.dev/)
+- **Routing**: [TanStack Router](https://tanstack.com/router)
+- **Backend**: [Convex](https://www.convex.dev/) - Real-time database and backend
+- **Storage**: [Cloudflare R2](https://www.cloudflare.com/developer-platform/r2/) - Media file storage
+- **UI Components**: [shadcn/ui](https://ui.shadcn.com/) with [Tailwind CSS](https://tailwindcss.com/)
+- **AI**: Google Gemini - Text summarization and transcription
+- **Deployment**: Cloudflare Pages (via Wrangler)
+
+## Features
+
+- 📝 Text-based testimonials
+- 🎤 Audio recording with browser media recorder
+- 🎥 Video recording with mobile and desktop support
+- 🔍 Full-text search across testimonials
+- 📱 Responsive design with mobile-first approach
+- 🤖 AI-powered summarization using Google Gemini
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20+ and pnpm
+- Convex account for backend
+- Cloudflare account for R2 storage
+- Google Gemini API key for AI features
+
+### Installation
+
+1. Clone the repository:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+git clone https://github.com/hack-van/for-club-freedom-2025.git
+cd for-club-freedom-2025
+```
+
+2. Install dependencies:
+
+```bash
+pnpm install
+```
+
+3. Set up environment variables (see Environment Variables section below)
+
+4. Run the development server:
+
+```bash
 pnpm dev
-# or
-bun dev
+```
+
+5. In a separate terminal, start the Convex development server:
+
+```bash
+pnpm convex dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -35,56 +80,119 @@ Then run the development server with HTTPS. If you are in Windows, use administr
 pnpm dev:https
 ```
 
-Open [https://localhost:3000](https://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
 
-Or you can access the server with your local network IP address, e.g. `https://<your-local-ip>:3000`.
+## Environment Variables
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-## Environment variables
-
-Copy the .env.example file as your .env file. Then edit it to include your api keys.
+Create a `.env` file in the root directory with the following variables:
 
 ```bash
-cp .env.example .env
+# Convex
+CONVEX_DEPLOYMENT=<your-convex-deployment-url>
+VITE_CONVEX_URL=<your-convex-url>
+
+# Cloudflare R2
+R2_ACCOUNT_ID=<your-cloudflare-account-id>
+R2_ACCESS_KEY_ID=<your-r2-access-key>
+R2_SECRET_ACCESS_KEY=<your-r2-secret-key>
+R2_BUCKET_NAME=<your-bucket-name>
+
+# Google Gemini
+GOOGLE_GEMINI_API_KEY=<your-gemini-api-key>
 ```
 
-## This project is using shadcn/ui and tailwindcss
-
-This project is using [shadcn/ui](https://ui.shadcn.com/) and [tailwindcss](https://tailwindcss.com/) for building the UI components. You can find the components in the `components` folder.
-
-To install the components, run the following command:
+## Project Structure
 
 ```
-npx shadcn@latest add <component-name>
-# or
+├── app/                    # TanStack Router application
+│   ├── routes/            # Route components
+│   │   ├── index.tsx     # Home page (testimonial form)
+│   │   ├── admin/        # Admin dashboard
+│   │   └── testimonials/ # Testimonial detail pages
+│   └── router.tsx        # Router configuration
+├── components/            # React components
+│   ├── form/             # Form components
+│   ├── recorder/         # Audio/video recorder components
+│   └── ui/               # shadcn/ui components
+├── convex/               # Convex backend
+│   ├── schema.ts         # Database schema
+│   ├── testimonials.ts   # Testimonial queries/mutations
+│   ├── media.ts          # Media handling
+│   └── r2.ts             # R2 storage integration
+├── gemini/               # Google Gemini integration
+│   └── summarize_text.ts # Text summarization
+└── lib/                  # Utility functions
+```
+
+## Using shadcn/ui Components
+
+This project uses [shadcn/ui](https://ui.shadcn.com/) and [Tailwind CSS](https://tailwindcss.com/) for building UI components.
+
+To add new components:
+
+```bash
 pnpm dlx shadcn@latest add <component-name>
-
 ```
 
-The list of available components can be found [here](https://ui.shadcn.com/docs/components/).
+Available components: https://ui.shadcn.com/docs/components/
 
-## Running Convex sync engine
+## Running Convex Backend
+
+The Convex backend provides real-time database, file storage, and serverless functions.
+
+Start the Convex development server:
 
 ```bash
-npx convex dev
-# or
 pnpm convex dev
 ```
 
-## Run any .ts file in isolation
+Deploy to production:
 
-`pnpm run_in_isolation -- path/to/your/file.ts`
+```bash
+pnpm convex deploy
+```
+
+## Running Isolated Scripts
+
+To run any TypeScript file in isolation:
+
+```bash
+pnpm run_in_isolation -- path/to/your/file.ts
+```
+
+## Building for Production
+
+Build the application:
+
+```bash
+pnpm build
+```
+
+Preview the production build:
+
+```bash
+pnpm preview
+```
+
+## Deployment
+
+This application is configured for deployment on Cloudflare Pages using Wrangler.
+
+1. Configure your Cloudflare account in `wrangler.jsonc`
+2. Deploy using Wrangler:
+
+```bash
+pnpm wrangler pages deploy
+```
+
+## Learn More
+
+- [TanStack Router Documentation](https://tanstack.com/router/latest)
+- [Convex Documentation](https://docs.convex.dev/)
+- [Vite Documentation](https://vitejs.dev/)
+- [shadcn/ui Documentation](https://ui.shadcn.com/)
+- [Cloudflare R2 Documentation](https://developers.cloudflare.com/r2/)
+
+## License
+
+This project is private and intended for Club Freedom use.

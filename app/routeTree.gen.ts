@@ -12,8 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TestimonialsIndexRouteImport } from './routes/testimonials/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as TestimonialsIdIndexRouteImport } from './routes/testimonials/$id/index'
-import { Route as TestimonialsIdMediaDownloadRouteImport } from './routes/testimonials/$id/media-download'
+import { Route as TestimonialsIdRouteImport } from './routes/testimonials/$id'
+import { Route as TestimonialsIdMediaDownloadRouteImport } from './routes/testimonials/$id.media-download'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -30,70 +30,69 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TestimonialsIdIndexRoute = TestimonialsIdIndexRouteImport.update({
-  id: '/testimonials/$id/',
-  path: '/testimonials/$id/',
+const TestimonialsIdRoute = TestimonialsIdRouteImport.update({
+  id: '/testimonials/$id',
+  path: '/testimonials/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TestimonialsIdMediaDownloadRoute =
   TestimonialsIdMediaDownloadRouteImport.update({
-    id: '/testimonials/$id/media-download',
-    path: '/testimonials/$id/media-download',
-    getParentRoute: () => rootRouteImport,
+    id: '/media-download',
+    path: '/media-download',
+    getParentRoute: () => TestimonialsIdRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/testimonials/$id': typeof TestimonialsIdRouteWithChildren
   '/admin': typeof AdminIndexRoute
   '/testimonials': typeof TestimonialsIndexRoute
   '/testimonials/$id/media-download': typeof TestimonialsIdMediaDownloadRoute
-  '/testimonials/$id': typeof TestimonialsIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/testimonials/$id': typeof TestimonialsIdRouteWithChildren
   '/admin': typeof AdminIndexRoute
   '/testimonials': typeof TestimonialsIndexRoute
   '/testimonials/$id/media-download': typeof TestimonialsIdMediaDownloadRoute
-  '/testimonials/$id': typeof TestimonialsIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/testimonials/$id': typeof TestimonialsIdRouteWithChildren
   '/admin/': typeof AdminIndexRoute
   '/testimonials/': typeof TestimonialsIndexRoute
   '/testimonials/$id/media-download': typeof TestimonialsIdMediaDownloadRoute
-  '/testimonials/$id/': typeof TestimonialsIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/testimonials/$id'
     | '/admin'
     | '/testimonials'
     | '/testimonials/$id/media-download'
-    | '/testimonials/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/testimonials/$id'
     | '/admin'
     | '/testimonials'
     | '/testimonials/$id/media-download'
-    | '/testimonials/$id'
   id:
     | '__root__'
     | '/'
+    | '/testimonials/$id'
     | '/admin/'
     | '/testimonials/'
     | '/testimonials/$id/media-download'
-    | '/testimonials/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  TestimonialsIdRoute: typeof TestimonialsIdRouteWithChildren
   AdminIndexRoute: typeof AdminIndexRoute
   TestimonialsIndexRoute: typeof TestimonialsIndexRoute
-  TestimonialsIdMediaDownloadRoute: typeof TestimonialsIdMediaDownloadRoute
-  TestimonialsIdIndexRoute: typeof TestimonialsIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -119,29 +118,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/testimonials/$id/': {
-      id: '/testimonials/$id/'
+    '/testimonials/$id': {
+      id: '/testimonials/$id'
       path: '/testimonials/$id'
       fullPath: '/testimonials/$id'
-      preLoaderRoute: typeof TestimonialsIdIndexRouteImport
+      preLoaderRoute: typeof TestimonialsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/testimonials/$id/media-download': {
       id: '/testimonials/$id/media-download'
-      path: '/testimonials/$id/media-download'
+      path: '/media-download'
       fullPath: '/testimonials/$id/media-download'
       preLoaderRoute: typeof TestimonialsIdMediaDownloadRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof TestimonialsIdRoute
     }
   }
 }
 
+interface TestimonialsIdRouteChildren {
+  TestimonialsIdMediaDownloadRoute: typeof TestimonialsIdMediaDownloadRoute
+}
+
+const TestimonialsIdRouteChildren: TestimonialsIdRouteChildren = {
+  TestimonialsIdMediaDownloadRoute: TestimonialsIdMediaDownloadRoute,
+}
+
+const TestimonialsIdRouteWithChildren = TestimonialsIdRoute._addFileChildren(
+  TestimonialsIdRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  TestimonialsIdRoute: TestimonialsIdRouteWithChildren,
   AdminIndexRoute: AdminIndexRoute,
   TestimonialsIndexRoute: TestimonialsIndexRoute,
-  TestimonialsIdMediaDownloadRoute: TestimonialsIdMediaDownloadRoute,
-  TestimonialsIdIndexRoute: TestimonialsIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

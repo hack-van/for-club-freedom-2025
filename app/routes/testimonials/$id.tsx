@@ -4,7 +4,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
 
-export const Route = createFileRoute("/testimonials/$id/")({
+export const Route = createFileRoute("/testimonials/$id")({
   component: TestimonialDetailPage,
 });
 

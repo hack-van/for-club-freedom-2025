@@ -37,25 +37,8 @@ export default function TestimonialDetail({ id }: Props) {
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-2xl font-bold">{testimonial.title}</h1>
-      <div className="flex gap-2">
-        {testimonial.mediaUrl && (
-          <Button asChild>
-            <a href={`${pathname}/download-media`} target="_blank">
-              Download {testimonial.media_type == "audio" ? "Audio" : "Video"}
-            </a>
-          </Button>
-        )}
-        <Button
-          onClick={downloadTranscription}
-          disabled={!testimonial.testimonialText}
-        >
-          {testimonial.media_id
-            ? "Download Transcription"
-            : "Download Testimonial"}
-        </Button>
-      </div>
       <div className="space-y-1">
+        <h1 className="text-2xl font-bold">{testimonial.title}</h1>
         <h3 className="font-bold">Posted by {testimonial.name}</h3>
         <p className="font-mono text-muted-foreground">
           {testimonial._creationTime
@@ -73,11 +56,16 @@ export default function TestimonialDetail({ id }: Props) {
       )}
       <div className="flex gap-2">
         {testimonial.mediaUrl && (
-          <Button onClick={downloadMedia} className="cursor-pointer">
-            Download {testimonial.media_type == "audio" ? "Audio" : "Video"}
+          <Button asChild>
+            <a href={`${pathname}/download-media`} target="_blank">
+              Download {testimonial.media_type == "audio" ? "Audio" : "Video"}
+            </a>
           </Button>
         )}
-        <Button onClick={downloadTranscription} className="cursor-pointer">
+        <Button
+          onClick={downloadTranscription}
+          disabled={!testimonial.testimonialText}
+        >
           {testimonial.media_id
             ? "Download Transcription"
             : "Download Testimonial"}

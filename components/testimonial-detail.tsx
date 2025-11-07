@@ -4,8 +4,9 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { Button } from "@/components/ui/button";
-import { format, formatDistance, formatRelative, subDays } from "date-fns";
+import { formatDistance } from "date-fns";
 import { Spinner } from "@/components/ui/spinner";
+import { usePathname } from "next/navigation";
 
 type Props = {
   id: Id<"testimonials">;
@@ -13,40 +14,11 @@ type Props = {
 
 export default function TestimonialDetail({ id }: Props) {
   const testimonial = useQuery(api.testimonials.getTestimonialById, { id });
+  const pathname = usePathname();
 
   if (!testimonial) {
     return <div>Loading testimonial...</div>;
   }
-
-  const downloadMedia = async () => {
-    if (!testimonial.mediaUrl) return;
-
-    try {
-      // Fetch the file as a blob
-      const response = await fetch(testimonial.mediaUrl);
-      if (!response.ok) throw new Error("Failed to fetch media");
-
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-
-      // Create download link
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `${testimonial.name}-${testimonial.createdAt}-testimonial.${
-        testimonial.media_type === "audio" ? "mp3" : "mp4"
-      }`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      // Clean up the blob URL
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Download failed:", error);
-      // Fallback: open in new tab
-      window.open(testimonial.mediaUrl, "_blank");
-    }
-  };
 
   const downloadTranscription = () => {
     const element = document.createElement("a");
@@ -55,7 +27,7 @@ export default function TestimonialDetail({ id }: Props) {
       { type: "text/plain" }
     );
     element.href = URL.createObjectURL(file);
-    element.download = `${testimonial.name}-${testimonial.createdAt}-transcription.txt`;
+    element.download = `${testimonial.name}-${testimonial._creationTime}-transcription.txt`;
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
@@ -72,11 +44,16 @@ export default function TestimonialDetail({ id }: Props) {
       )}
       <div className="flex gap-2">
         {testimonial.mediaUrl && (
-          <Button onClick={downloadMedia}>
-            Download {testimonial.media_type == "audio" ? "Audio" : "Video"}
+          <Button asChild>
+            <a href={`${pathname}/download-media`} target="_blank">
+              Download {testimonial.media_type == "audio" ? "Audio" : "Video"}
+            </a>
           </Button>
         )}
-        <Button onClick={downloadTranscription}>
+        <Button
+          onClick={downloadTranscription}
+          disabled={!testimonial.testimonialText}
+        >
           {testimonial.media_id
             ? "Download Transcription"
             : "Download Testimonial"}
@@ -85,8 +62,8 @@ export default function TestimonialDetail({ id }: Props) {
       <div className="space-y-1">
         <h3 className="font-bold">Posted by {testimonial.name}</h3>
         <p className="font-mono text-muted-foreground">
-          {testimonial.createdAt
-            ? formatDistance(testimonial.createdAt, Date.now(), {
+          {testimonial._creationTime
+            ? formatDistance(testimonial._creationTime, Date.now(), {
                 addSuffix: true,
               })
             : "Date not available"}

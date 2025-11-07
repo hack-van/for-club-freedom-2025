@@ -113,8 +113,7 @@ Make sure you have [mkcert](https://github.com/FiloSottile/mkcert) installed for
 
 ```bash
 mkdir -p ./certificates
-mkcert -cert-file ./certificates/dev.pem -key-file ./certificates/dev-key.pem \
-  "*.club-freedom.local" club-freedom.local admin.club-freedom.local localhost 127.0.0.1
+mkcert -cert-file ./certificates/dev.pem -key-file ./certificates/dev-key.pem localhost 127.0.0.1
 ```
 
 ## Project Structure

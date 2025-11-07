@@ -110,3 +110,8 @@ See this [migration](https://www.convex.dev/components/migrations) page for more
 To run a single migration, use the following command:
 
 `pnpx convex run migrations:run '{fn: "migrations:yourMigrationName"}'`
+
+## Creating users
+
+Assuming auth has been set up correctly, you can create users with the adminCreateUser function in convex\users.ts. It can be called manually through the convex console.
+![adminCreateUser](./images/manual_user_creation.png)

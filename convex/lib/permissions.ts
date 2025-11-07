@@ -1,3 +1,4 @@
+import { v } from "convex/values";
 import { Id } from "../_generated/dataModel";
 import { QueryCtx, MutationCtx } from "../_generated/server";
 
@@ -14,8 +15,11 @@ export type Role = (typeof VALID_ROLES)[keyof typeof VALID_ROLES];
  */
 export const VALID_ROLES = {
   USER: "user",
+  MODERATOR: "moderator",
   ADMIN: "admin",
 } as const;
+
+export const roles_schema = v.optional(v.union(v.literal("user"), v.literal("admin"), v.literal("moderator")));
 
 /**
  * Defines the hierarchy of roles using numeric values.
@@ -24,7 +28,8 @@ export const VALID_ROLES = {
  */
 const roleHierarchy: Record<Role, number> = {
   user: 0,
-  admin: 1,
+  moderator: 1,
+  admin: 2,
 };
 
 /**

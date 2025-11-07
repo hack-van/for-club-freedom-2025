@@ -23,7 +23,7 @@ export default function Navbar() {
       </div>
       <Unauthenticated>
         <Link href="/signin" className="ml-4">
-          <Button>Sign in/Sign up</Button>
+          <Button>Sign in</Button>
         </Link>
       </Unauthenticated>
       <Authenticated>

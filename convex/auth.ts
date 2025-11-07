@@ -1,9 +1,10 @@
 import { convexAuth } from "@convex-dev/auth/server";
-import { ResendOTP } from "./ResendOTP";
+import { Password } from "@convex-dev/auth/providers/Password";
+// import { ResendOTP } from "./ResendOTP";
 import { VALID_ROLES } from "./lib/permissions";
  
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
-  providers: [ResendOTP],
+  providers: [Password],
   callbacks: {
     async afterUserCreatedOrUpdated(ctx, args) {
       if (args.existingUserId) return;

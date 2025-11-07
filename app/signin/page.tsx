@@ -1,5 +1,4 @@
 "use client"
-import { SignOut } from "@/components/auth/signout";
 import { SignIn } from "../../components/auth/signin";
 import { Authenticated, Unauthenticated, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -16,8 +15,11 @@ export default function SignInPage() {
         <div className="flex justify-center"><SignIn /></div>
       </Unauthenticated>
       <Authenticated>
-        Signed in as {user?.email} as {user?.role}
-        <SignOut />
+        <div className="flex flex-col items-center justify-center text-center">
+          <h1 className="text-4xl font-bold py-24 gap-y-12">
+            Signed in as {user?.email} as {user?.role}
+          </h1>
+        </div>
       </Authenticated>
     </>
   );

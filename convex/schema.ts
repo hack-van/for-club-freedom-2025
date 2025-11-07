@@ -1,6 +1,7 @@
 import { defineSchema, defineTable } from "convex/server";
 import { authTables } from "@convex-dev/auth/server";
 import { v } from "convex/values";
+import { roles_schema } from "./lib/permissions";
 
 export default defineSchema({
   ...authTables,
@@ -12,7 +13,7 @@ export default defineSchema({
     name: v.optional(v.string()),
     phone: v.optional(v.string()),
     phoneVerificationTime: v.optional(v.float64()),
-    role: v.optional(v.union(v.literal("user"), v.literal("admin"))),
+    role: roles_schema, //Ensure this field matches VALID_ROLES and vice versa
   })
     .index("email", ["email"])
     .index("phone", ["phone"]),

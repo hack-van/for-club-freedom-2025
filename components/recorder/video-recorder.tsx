@@ -10,21 +10,21 @@ type Props = {
 };
 
 export default function VideoRecorder({ onRecordingComplete }: Props) {
+  const mp4Supported = MediaRecorder.isTypeSupported("video/mp4");
   return (
     <ReactMediaRecorder
       video
       audio
       blobPropertyBag={{
-        type: "video/mp4",
+        type: mp4Supported ? "video/mp4" : "video/webm"
+      }}
+      mediaRecorderOptions={{
+        mimeType: mp4Supported ? "video/mp4" : "video/webm",
       }}
       onStop={(_, blob) => {
-        const videoFile = new File(
-          [blob],
-          `video-recording-${Date.now()}.mp4`,
-          {
-            type: "video/mp4",
-          }
-        );
+        const videoFile = new File([blob], `video-recording-${Date.now()}`, {
+          type: blob.type ?? "video/webm",
+        });
         onRecordingComplete(videoFile);
       }}
       render={({
@@ -42,7 +42,7 @@ export default function VideoRecorder({ onRecordingComplete }: Props) {
         if (error || status === "permission_denied") {
           return (
             <div className="flex flex-col p-4 border items-center rounded-lg gap-4 w-full">
-              <div className="text-center text-red-600">
+              <div className="text-center text-destructive">
                 <p className="font-semibold">
                   Camera access denied or unavailable
                 </p>

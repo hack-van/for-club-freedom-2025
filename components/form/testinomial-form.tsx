@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Textarea } from "../ui/textarea";
 import { useState } from "react";
+import { useUploadFile } from "@convex-dev/r2/react";
 import useMobileDetect from "@/hooks/use-mobile-detect";
 import MobileVideoRecorder from "../recorder/mobile-video-recorder";
 import { Testimonial, testimonialSchema } from "@/lib/schema";
@@ -59,9 +60,8 @@ export default function TestimonialForm() {
     defaultValues: { name: "", writtenText: "", constent: false },
   });
   const router = useRouter();
+  const uploadFile = useUploadFile(api.r2);
   const isMobile = useMobileDetect();
-
-  const generateUploadUrl = useMutation(api.testimonials.generateUploadUrl);
   const postTestimonial = useMutation(api.testimonials.postTestimonial);
 
   const [tabValue, setTabValue] = useState("video");
@@ -72,20 +72,6 @@ export default function TestimonialForm() {
     form.resetField("writtenText");
   };
 
-  const uploadAudioFile = async (file: File) => {
-    const uploadUrl = await generateUploadUrl();
-    const result = await fetch(uploadUrl, {
-      method: "POST",
-      headers: { "Content-Type": file.type },
-      body: file,
-    });
-    if (!result.ok) {
-      return undefined;
-    }
-    const { storageId } = await result.json();
-    return storageId as string;
-  };
-
   const canSwitchTab =
     form.watch("mediaFile") == null && form.watch("writtenText") === "";
 
@@ -94,7 +80,7 @@ export default function TestimonialForm() {
       let storageId: string | undefined = undefined;
       let media_type = "text";
       if (values.mediaFile) {
-        storageId = await uploadAudioFile(values.mediaFile);
+        storageId = await uploadFile(values.mediaFile);
         if (!storageId) {
           throw new Error("Failed to upload audio file");
         }
@@ -109,7 +95,7 @@ export default function TestimonialForm() {
       const id = await postTestimonial({
         name: values.name,
         email: values.email,
-        media_id: storageId as any,
+        storageId: storageId,
         media_type: media_type,
         text: values.writtenText,
       });

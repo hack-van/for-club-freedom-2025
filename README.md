@@ -35,6 +35,10 @@ We are using [Resend](https://resend.com) as our email provider. You have to:
 
 We will need an official verified domain if we want our emails to not go to the spam folder.
 
+### Set up R2 for Convex
+
+To set up R2 for Convex, follow the instructions in the _Cloudflare Account_ section in the [Convex R2 documentation](https://www.convex.dev/components/cloudflare-r2#cloudflare-account).
+
 ### Development with HTTPS
 
 Make sure you have [mkcert](https://github.com/FiloSottile/mkcert) installed to create a local CA and generate locally trusted certificates.

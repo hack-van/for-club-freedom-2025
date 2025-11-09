@@ -3,7 +3,12 @@ import z from "zod";
 export const testimonialSchema = z
   .object({
     name: z.string().min(2, "Name must be at least 2 characters"),
-    email: z.email("Please enter a valid email address").optional(),
+    email: z
+      .union([
+        z.email("Please enter a valid email address"),
+        z.literal("").transform(() => undefined),
+      ])
+      .optional(),
     mediaFile: z
       .file({ error: "Please record your audio testimonial" })
       .optional(),

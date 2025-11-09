@@ -44,7 +44,7 @@ export const adminCreateUser = mutation({
   },
   handler: async (
     ctx: any,
-    args: { password: string; email: string; role?: string }
+    args: { password: string; email: string; role: string }
   ) => {
     //The code below will be useful later if admins want to create users through a UI. Otherwise, we can leave it commented.
     // const userId = await getAuthUserId(ctx);
@@ -63,7 +63,7 @@ export const adminCreateUser = mutation({
     };
     const profile = {
       email: args.email,
-      role: args.role ?? "admin",
+      role: args.role,
     };
     const newUser = await createAccount(ctx, {
       provider: providerId,

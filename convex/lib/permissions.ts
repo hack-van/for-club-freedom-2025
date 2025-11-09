@@ -19,7 +19,7 @@ export const VALID_ROLES = {
   ADMIN: "admin",
 } as const;
 
-export const roles_schema = v.optional(v.union(v.literal("user"), v.literal("admin"), v.literal("moderator")));
+export const roles_schema = v.union(v.literal("user"), v.literal("admin"), v.literal("moderator"));
 
 /**
  * Defines the hierarchy of roles using numeric values.

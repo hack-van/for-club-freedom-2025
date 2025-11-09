@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Authenticated, Unauthenticated, useQuery } from "convex/react";
-import { SignOut } from "@/components/auth/signout";
+import { SignOutButton } from "@/components/auth/signout-button";
 import { api } from "@/convex/_generated/api";
 
 export default function Navbar() {
@@ -17,9 +17,6 @@ export default function Navbar() {
             alt="city-reach-logo"
           ></img>
         </Link>
-        <Link href="/testimonials" className="ml-4">
-          <Button>Testimonials</Button>
-        </Link>
       </div>
       <Unauthenticated>
         <Link href="/signin" className="ml-4">
@@ -30,7 +27,7 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
           Hello, {user?.email} ({user?.role})
           <Link href="/signin" className="ml-4">
-            <SignOut />
+            <SignOutButton />
           </Link>
         </div>
       </Authenticated>

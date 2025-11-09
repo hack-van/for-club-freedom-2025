@@ -1,5 +1,5 @@
 "use client"
-import { SignIn } from "../../components/auth/signin";
+import { SignInButton } from "../../components/auth/signin-button";
 import { Authenticated, Unauthenticated, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 export default function SignInPage() {
@@ -12,7 +12,7 @@ export default function SignInPage() {
             Sign In
           </h1>
         </div>
-        <div className="flex justify-center"><SignIn /></div>
+        <div className="flex justify-center"><SignInButton /></div>
       </Unauthenticated>
       <Authenticated>
         <div className="flex flex-col items-center justify-center text-center">

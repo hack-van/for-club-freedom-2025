@@ -14,6 +14,8 @@ import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { getApprovalStatusText } from "@/utils/testimonial-utils";
+import { isModOrAdmin } from "@/convex/lib/permissions";
 
 type Props = {
   testimonial: Doc<"testimonials"> & { mediaUrl?: string | null };
@@ -22,12 +24,7 @@ type Props = {
 export function TestimonialCard({ testimonial }: Props) {
   const date = new Date(testimonial._creationTime);
   const user = useQuery(api.users.currentUser);
-  const approvalText =
-    testimonial.approved === true
-      ? "Approved"
-      : testimonial.approved === false
-      ? "Disapproved"
-      : "Pending";
+  const approvalText = getApprovalStatusText(testimonial.approved);
   return (
     <Card className="w-full relative">
       <CardHeader>
@@ -39,7 +36,7 @@ export function TestimonialCard({ testimonial }: Props) {
             <CardTitle className="">{testimonial.title}</CardTitle>
           </Link>
           <div className="flex items-center gap-2">
-            {user?.role === "admin" && (
+            {isModOrAdmin(user?.role) && (
               <p className="text-sm">{approvalText}</p>
             )}
             <p className="text-xs text-muted-foreground whitespace-nowrap">

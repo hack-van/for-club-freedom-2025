@@ -2,11 +2,13 @@
 
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { Button } from "@/components/ui/button";
 import { formatDistance } from "date-fns";
 import { Spinner } from "@/components/ui/spinner";
 import { usePathname } from "next/navigation";
+import { getApprovalStatusText } from "@/utils/testimonial-utils";
+import { isModOrAdmin } from "@/convex/lib/permissions";
 
 type Props = {
   id: Id<"testimonials">;
@@ -15,11 +17,12 @@ type Props = {
 export default function TestimonialDetail({ id }: Props) {
   const testimonial = useQuery(api.testimonials.getTestimonialById, { id });
   const pathname = usePathname();
-
+  const user = useQuery(api.users.currentUser);
+  const updateTestimonialApproval = useMutation(api.testimonials.updateTestimonialApproval);
   if (!testimonial) {
     return <div>Loading testimonial...</div>;
   }
-
+  const approvalText = getApprovalStatusText(testimonial.approved);
   const downloadTranscription = () => {
     const element = document.createElement("a");
     const file = new Blob(
@@ -32,6 +35,10 @@ export default function TestimonialDetail({ id }: Props) {
     element.click();
     document.body.removeChild(element);
   };
+
+  const handleApprovalOrDisapproval = async (approved: boolean) => {
+    await updateTestimonialApproval({ id, approved });
+  }
 
   return (
     <div className="flex flex-col gap-8">
@@ -59,6 +66,9 @@ export default function TestimonialDetail({ id }: Props) {
             : "Download Testimonial"}
         </Button>
       </div>
+      {isModOrAdmin(user?.role) && (
+        <p>{approvalText}</p>
+      )}
       <div className="space-y-1">
         <h3 className="font-bold">Posted by {testimonial.name}</h3>
         <p className="font-mono text-muted-foreground">
@@ -96,6 +106,20 @@ export default function TestimonialDetail({ id }: Props) {
           </p>
         )}
       </div>
+      {(user?.role === "admin" || user?.role === "moderator") && (
+        <div className="flex gap-2">
+          <Button className="bg-green-600 cursor-pointer"
+            onClick={() => handleApprovalOrDisapproval(true)}
+          >
+            Approve
+          </Button>
+          <Button className="bg-red-600 cursor-pointer"
+            onClick={() => handleApprovalOrDisapproval(false)}
+          >
+            Disapprove
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

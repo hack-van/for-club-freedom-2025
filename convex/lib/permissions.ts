@@ -64,3 +64,7 @@ export async function checkPermission(
   // Compare the user's role level against the required role level
   return roleHierarchy[user.role] >= roleHierarchy[requiredRole];
 }
+
+export function isModOrAdmin(role: string | undefined): boolean {
+  return role === "admin" || role === "moderator";
+}

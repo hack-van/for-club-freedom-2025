@@ -6,31 +6,22 @@ import { r2 } from "./r2";
 export const getTestimonials = query({
   args: { searchQuery: v.optional(v.string()) },
   handler: async (ctx, { searchQuery }) => {
-    let testimonials: any[] = [];
+    let filteredQuery = ctx.db
+      .query("testimonials")
+      .filter((q) => q.neq(q.field("title"), undefined))
+      .filter((q) => q.neq(q.field("summary"), undefined))
+      .filter((q) => q.neq(q.field("testimonialText"), undefined));
 
-    if (searchQuery && searchQuery.trim() !== "") {
-      // Full-text search path (no filters before withSearchIndex)
-      testimonials = await ctx.db
-        .query("testimonials")
-        .withSearchIndex("search_posts", (q) =>
-          q.search("searchText", searchQuery)
-        )
-        .collect();
-
-      // Optional JS-side filtering
-      testimonials = testimonials.filter(
-        (t) => t.title && t.summary && t.testimonialText
-      );
-    } else {
-      // Normal query path with filters
-      testimonials = await ctx.db
-        .query("testimonials")
-        .filter((q) => q.neq(q.field("title"), undefined))
-        .filter((q) => q.neq(q.field("summary"), undefined))
-        .filter((q) => q.neq(q.field("testimonialText"), undefined))
-        .order("desc")
-        .collect();
-    }
+    let testimonials =
+      searchQuery && searchQuery.trim() !== ""
+        ? // Full-text search path (no filters before withSearchIndex)
+          await filteredQuery
+            .withSearchIndex("search_posts", (q) =>
+              q.search("searchText", searchQuery)
+            )
+            .collect()
+        : // Normal query path with filters
+          await filteredQuery.order("desc").collect();
 
     const testimonialsWithMedia = await Promise.all(
       testimonials.map(async (t) => {

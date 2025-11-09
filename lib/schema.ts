@@ -29,5 +29,7 @@ export const testimonialSchema = z
       });
     }
   });
-
+export const emailSchema = z.object({
+  email: z.email(),
+});
 export type Testimonial = z.infer<typeof testimonialSchema>;

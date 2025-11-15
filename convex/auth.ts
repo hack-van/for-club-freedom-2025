@@ -60,7 +60,20 @@ export const createAuth = (
 export const getCurrentUser = query({
   args: {},
   handler: async (ctx) => {
-    return authComponent.getAuthUser(ctx);
+    try {
+      return await authComponent.getAuthUser(ctx);
+    } catch (err: unknown) {
+      // If the call failed because the user is not signed in, return null so client code can handle it.
+      // Be conservative: only swallow unauthenticated errors; rethrow unexpected errors.
+      const message = (err as any)?.message ?? "";
+      if (
+        message.toString().toLowerCase().includes("unauthenticated") ||
+        (err as any)?.name === "Unauthenticated"
+      ) {
+        return null;
+      }
+      throw err;
+    }
   },
 });
 

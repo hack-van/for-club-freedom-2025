@@ -1,37 +1,41 @@
 "use client"
-import { useAuthActions } from "@convex-dev/auth/react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
  
 export function SignInButton() {
-  const { signIn } = useAuthActions();
   const router = useRouter();
+  
   return (
     <form
       onSubmit={async (event) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        try {
-          const result = await signIn("password", formData);
-          // Some SDKs return an object on failure instead of rejecting.
-          if (result && (result as any).error) {
-            toast.error(String((result as any).error));
-            return;
-          }
-          // success -> navigate to testimonials
-          router.push("/testimonials");
-        } catch (err: any) {
-          toast.error(String(err?.message ?? err ?? "Failed to sign in"));
-        }
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+        await authClient.signIn.email(
+          {
+            email,
+            password,
+          },
+          {
+            onSuccess: (ctx) => {
+              router.push("/testimonials");
+            },
+            onError: (ctx) => {
+              toast.error(ctx.error.message);
+            },
+          },
+        );
       }}
     >
       <div className="flex flex-col gap-4">
         <Input name="email" placeholder="Email" type="text" />
         <Input name="password" placeholder="Password" type="password" />
         <Input name="flow" type="hidden" value={"signIn"} />
-        <Button type="submit">Sign in</Button>
+        <Button type="submit" className="cursor-pointer">Sign in</Button>
       </div>
     </form>
   );

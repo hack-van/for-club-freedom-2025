@@ -27,7 +27,7 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
           Hello, {user?.email} ({user?.role})
           <Link href="/signin" className="ml-4">
-            {/* <SignOutButton /> */}
+            <SignOutButton />
           </Link>
         </div>
       </Authenticated>

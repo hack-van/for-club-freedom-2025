@@ -32,7 +32,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 For more details, visit this [guide](https://convex-better-auth.netlify.app/framework-guides/next)
 
-Make to also generate schemas for the betterAuth components.
+Whenever you want to make changes to the betterAuth schemas and components, run the following command
 
 ```
 cd convex/betterAuth
@@ -42,6 +42,12 @@ npx @better-auth/cli generate -y
 Note: the betterAuth tables can be accessed under the betterAuth component in the convex dash board.
 
 ![betterAuth](./images/betterAuth_component.png)
+
+To access the admin create user page without being an admin, comment out the if condition in app\admin\createuser\page.tsx.
+
+You must manually set the user's role in the betterAuth.users table.
+
+![admin](./images/better_auth_admin_set.png)
 
 ### Set up R2 for Convex
 

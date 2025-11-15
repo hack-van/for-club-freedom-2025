@@ -1,16 +1,75 @@
-import { convexAuth } from "@convex-dev/auth/server";
-import { Password } from "@convex-dev/auth/providers/Password";
-import { emailSchema } from "@/lib/schema";
-import { ConvexError } from "convex/values";
- 
-export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
-  providers: [Password({
-    profile(params) {
-      const { error, data } = emailSchema.safeParse(params);
-      if (error) {
-        throw new ConvexError(error.message);
-      }
-      return { email: data.email };
+import { createClient, type GenericCtx } from "@convex-dev/better-auth";
+import { convex } from "@convex-dev/better-auth/plugins";
+import { components } from "./_generated/api";
+import { DataModel } from "./_generated/dataModel";
+import { query } from "./_generated/server";
+import { betterAuth, BetterAuthOptions } from "better-auth";
+import authSchema from "./betterAuth/schema";
+import { v } from "convex/values";
+
+const siteUrl = process.env.SITE_URL!;
+
+// The component client has methods needed for integrating Convex with Better Auth,
+// as well as helper methods for general use.
+export const authComponent = createClient<DataModel, typeof authSchema>(
+  components.betterAuth,
+  {
+    local: {
+      schema: authSchema,
     },
-  })],
+    verbose: false,
+  },
+);
+
+export const createAuth = (
+  ctx: GenericCtx<DataModel>,
+  { optionsOnly } = { optionsOnly: false },
+) => {
+  return betterAuth({
+    user: {
+      additionalFields: {
+        role: {
+          type: "string",
+          required: false,
+          defaultValue: "user",
+          input: false, // don't allow user to set role
+        }
+      },
+    },
+    // disable logging when createAuth is called just to generate options.
+    // this is not required, but there's a lot of noise in logs without it.
+    logger: {
+      disabled: optionsOnly,
+    },
+    baseURL: siteUrl,
+    database: authComponent.adapter(ctx),
+    // Configure simple, non-verified email/password to get started
+    emailAndPassword: {
+      enabled: true,
+      requireEmailVerification: false,
+    },
+    plugins: [
+      // The Convex plugin is required for Convex compatibility
+      convex(),
+    ],
+  } satisfies BetterAuthOptions);
+};
+
+// Example function for getting the current user
+// Feel free to edit, omit, etc.
+export const getCurrentUser = query({
+  args: {},
+  handler: async (ctx) => {
+    return authComponent.getAuthUser(ctx);
+  },
+});
+
+// Get a user by their Better Auth user id with Local Install
+export const getUserById = query({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    return ctx.runQuery(components.betterAuth.auth.getUser, {
+      userId: args.userId,
+    });
+  },
 });

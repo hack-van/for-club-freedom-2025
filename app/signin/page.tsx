@@ -3,7 +3,7 @@ import { SignInButton } from "../../components/auth/signin-button";
 import { Authenticated, Unauthenticated, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 export default function SignInPage() {
-  const user = useQuery(api.users.currentUser);
+  const user = useQuery(api.auth.getCurrentUser);
   return (
     <>
       <Unauthenticated>

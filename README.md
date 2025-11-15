@@ -20,20 +20,28 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Setting up Convex Auth in your environment
+### Setting up Better Auth with Convex in your environment
 
-Follow the instructions in this [link](https://labs.convex.dev/auth/setup).
+1. Run pnpm install
+2. Create the BETTER_AUTH_SECRET environment variable in your convex environment with the following command:
+   `npx convex env set BETTER_AUTH_SECRET=$(openssl rand -base64 32)`
+3. Add your site url to your convex environment variables
+   `npx convex env set SITE_URL http://localhost:3000`
+   In prod, use the prod site url
+4. Ensure you have NEXT_PUBLIC_CONVEX_SITE_URL and SITE_URL set in your .env.local file.
 
-1. Ensure @convex-dev/auth @auth/core@0.37.0 is installed.
-2. Go to the [Manual Setup](https://labs.convex.dev/auth/setup/manual) page and follow steps 1 and 2 of it to ensure you have the proper environment variables set up in your convex environment.
+For more details, visit this [guide](https://convex-better-auth.netlify.app/framework-guides/next)
 
-We are using [Resend](https://resend.com) as our email provider. You have to:
+Make to also generate schemas for the betterAuth components.
 
-1. Register a resend account
-2. Get an API key
-3. Verify your domain.
+```
+cd convex/betterAuth
+npx @better-auth/cli generate -y
+```
 
-We will need an official verified domain if we want our emails to not go to the spam folder.
+Note: the betterAuth tables can be accessed under the betterAuth component in the convex dash board.
+
+![betterAuth](./images/betterAuth_component.png)
 
 ### Set up R2 for Convex
 

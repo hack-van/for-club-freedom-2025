@@ -17,7 +17,7 @@ type Props = {
 export default function TestimonialDetail({ id }: Props) {
   const testimonial = useQuery(api.testimonials.getTestimonialById, { id });
   const pathname = usePathname();
-  const user = useQuery(api.users.currentUser);
+  const user = useQuery(api.auth.getCurrentUser);
   const updateTestimonialApproval = useMutation(api.testimonials.updateTestimonialApproval);
   if (!testimonial) {
     return <div>Loading testimonial...</div>;

@@ -6,7 +6,7 @@ import { SignOutButton } from "@/components/auth/signout-button";
 import { api } from "@/convex/_generated/api";
 
 export default function Navbar() {
-  const user = useQuery(api.users.currentUser);
+  const user = useQuery(api.auth.getCurrentUser);
   return (
     <header className="border-b px-4 md:px-6 flex justify-between items-center">
       <div className="flex items-center">
@@ -27,7 +27,7 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
           Hello, {user?.email} ({user?.role})
           <Link href="/signin" className="ml-4">
-            <SignOutButton />
+            {/* <SignOutButton /> */}
           </Link>
         </div>
       </Authenticated>

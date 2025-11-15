@@ -23,7 +23,7 @@ type Props = {
 
 export function TestimonialCard({ testimonial }: Props) {
   const date = new Date(testimonial._creationTime);
-  const user = useQuery(api.users.currentUser);
+  const user = useQuery(api.auth.getCurrentUser);
   const approvalText = getApprovalStatusText(testimonial.approved);
   return (
     <Card className="w-full relative">

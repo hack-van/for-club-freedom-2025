@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -16,7 +15,7 @@ import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useRouter } from "next/navigation";
+import { forbidden } from "next/navigation";
 export default function SignUpPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -25,7 +24,6 @@ export default function SignUpPage() {
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [loading, setLoading] = useState(false);
   const user = useQuery(api.auth.getCurrentUser);
-  const router = useRouter();
   const handleSignUp = async () => {
     await authClient.signUp.email(
       {
@@ -51,8 +49,9 @@ export default function SignUpPage() {
       },
     );
   };
-  if (user && user.role !== "admin") { //For devs to access this page without the admin role, comment out this condition
-    router.push("/signin")
+  console.log(user)
+  if (!user || (user && user.role !== "admin")) { //For devs to access this page without the admin role, comment out this condition
+    forbidden()
   }
   return (
     <div className="min-h-screen flex items-center justify-center px-4">

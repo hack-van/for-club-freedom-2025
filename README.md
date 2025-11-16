@@ -43,6 +43,17 @@ Note: the betterAuth tables can be accessed under the betterAuth component in th
 
 ![betterAuth](./images/betterAuth_component.png)
 
+### Setting up Resend
+
+We are using [Resend](https://resend.com) as our email provider. You have to:
+
+1. Register a resend account
+2. Get an API key
+3. Verify your domain.
+4. Ensure the RESEND_API_KEY environment variable is set in your convex environment with the API key value.
+   For more information, follow the instructions [here](https://www.convex.dev/components/resend) to set up resend in your convex environment
+   We will need an official verified domain if we want our emails to not go to the spam folder.
+
 ### Creating Users
 
 To access the admin create user page without being an admin, comment out the if condition in app\admin\createuser\page.tsx.

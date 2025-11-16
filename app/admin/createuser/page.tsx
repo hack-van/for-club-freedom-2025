@@ -10,20 +10,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { Loader2, X } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { forbidden } from "next/navigation";
 export default function SignUpPage() {
+  const user = useQuery(api.auth.getCurrentUser);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [loading, setLoading] = useState(false);
-  const user = useQuery(api.auth.getCurrentUser);
   const handleSignUp = async () => {
     await authClient.signUp.email(
       {
@@ -50,9 +50,15 @@ export default function SignUpPage() {
     );
   };
   console.log(user)
-  if (!user || (user && user.role !== "admin")) { //For devs to access this page without the admin role, comment out this condition
-    forbidden()
+  if (user === undefined) {
+    return <div>Loading...</div>;
   }
+  if (user === null || user.role !== "admin") { //For devs to access this page without the admin role, comment out this condition
+    return (
+      <>Forbidden</>
+    )
+  }
+  
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <Card className="max-w-md">

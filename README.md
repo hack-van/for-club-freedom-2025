@@ -36,12 +36,14 @@ Whenever you want to make changes to the betterAuth schemas and components, run 
 
 ```
 cd convex/betterAuth
-npx @better-auth/cli generate -y
+npx @better-auth/cli generate -y --output generatedSchema.ts
 ```
 
 Note: the betterAuth tables can be accessed under the betterAuth component in the convex dash board.
 
 ![betterAuth](./images/betterAuth_component.png)
+
+### Creating Users
 
 To access the admin create user page without being an admin, comment out the if condition in app\admin\createuser\page.tsx.
 
@@ -124,8 +126,3 @@ See this [migration](https://www.convex.dev/components/migrations) page for more
 To run a single migration, use the following command:
 
 `pnpx convex run migrations:run '{fn: "migrations:yourMigrationName"}'`
-
-## Creating users
-
-Assuming auth has been set up correctly, you can create users with the adminCreateUser function in convex\users.ts. It can be called manually through the convex console.
-![adminCreateUser](./images/manual_user_creation.png)

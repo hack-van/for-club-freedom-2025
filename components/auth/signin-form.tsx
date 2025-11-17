@@ -44,7 +44,13 @@ export function SignInForm() {
         <Input name="flow" type="hidden" value="signIn" />
         <Button type="submit" className="cursor-pointer">Sign in</Button>
         <Link href="/request-password-reset">
-          <Button className="cursor-pointer">Forgot your password?</Button>
+          <Button variant="link"
+            size="sm"
+            type="button"
+            className="cursor-pointer"
+          >
+            Forgot your password?
+        </Button>
         </Link>
       </div>
     </form>

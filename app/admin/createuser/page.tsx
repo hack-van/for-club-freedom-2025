@@ -15,7 +15,6 @@ import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { forbidden } from "next/navigation";
 export default function SignUpPage() {
   const user = useQuery(api.auth.getCurrentUser);
   const [firstName, setFirstName] = useState("");
@@ -42,14 +41,11 @@ export default function SignUpPage() {
         },
         onError: async (ctx) => {
           setLoading(false);
-          console.error(ctx.error);
-          console.error("response", ctx.response);
           toast.error(ctx.error.message);
         },
       },
     );
   };
-  console.log(user)
   if (user === undefined) {
     return <div>Loading...</div>;
   }

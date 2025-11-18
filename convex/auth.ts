@@ -7,7 +7,7 @@ import { query } from "@/convex/_generated/server";
 import { betterAuth, BetterAuthOptions } from "better-auth";
 import authSchema from "@/convex/betterAuth/schema";
 import { v } from "convex/values";
-import { sendResetPassword } from "@/convex/email";
+import { sendResetPassword } from "./email";
 
 const siteUrl = process.env.SITE_URL!;
 
@@ -20,12 +20,12 @@ export const authComponent = createClient<DataModel, typeof authSchema>(
       schema: authSchema,
     },
     verbose: false,
-  },
+  }
 );
 
 export const createAuth = (
   ctx: GenericCtx<DataModel>,
-  { optionsOnly } = { optionsOnly: false },
+  { optionsOnly } = { optionsOnly: false }
 ) => {
   return betterAuth({
     user: {
@@ -35,7 +35,7 @@ export const createAuth = (
           required: false,
           defaultValue: "user",
           input: false, // don't allow user to set role
-        }
+        },
       },
     },
     // disable logging when createAuth is called just to generate options.

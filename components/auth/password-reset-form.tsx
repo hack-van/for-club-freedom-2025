@@ -1,120 +1,113 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardFooter,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
-import { useSearchParams } from "next/navigation";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 
-export default function ResetPasswordForm() {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+const passwordResetSchema = z
+  .object({
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
-  const handleResetPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!token) return;
+type PasswordReset = z.infer<typeof passwordResetSchema>;
 
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
+type Props = {
+  token: string;
+};
 
+export default function ResetPasswordForm({ token }: Props) {
+  const form = useForm<PasswordReset>({
+    defaultValues: {
+      password: "",
+      confirmPassword: "",
+    },
+    resolver: zodResolver(passwordResetSchema),
+  });
+  const router = useRouter();
+
+  const onSubmit = async (data: PasswordReset) => {
     await authClient.resetPassword(
       {
         token,
-        newPassword: password,
+        newPassword: data.password,
       },
       {
-        onRequest: () => {
-          setLoading(true);
+        onSuccess() {
+          router.push("/sign-in");
         },
-        onSuccess: () => {
-          setLoading(false);
-          redirect("/signin");
+        onError(context) {
+          toast.error(context.error.message);
         },
-        onError: (ctx) => {
-          setLoading(false);
-          alert(ctx.error.message);
-        },
-      },
+      }
     );
   };
 
-  if (!token) {
-    return (
-      <div className="min-h-screen w-full flex items-center justify-center p-4">
-        <Card className="max-w-md w-full">
-          <CardHeader className="space-y-2">
-            <CardTitle className="text-lg md:text-xl">Invalid Link</CardTitle>
-            <CardDescription className="text-xs md:text-sm">
-              This password reset link is invalid or has expired. Please request
-              a new one.
-            </CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4">
-      <Card className="max-w-md w-full">
-        <CardHeader>
-          <CardTitle className="text-lg md:text-xl">Reset Password</CardTitle>
-          <CardDescription className="text-xs md:text-sm">
-            Enter your new password below
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleResetPassword} className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="password">New Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter your new password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center">
+                <FormLabel>New password</FormLabel>
+              </div>
+              <FormControl>
+                <Input type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <div className="grid gap-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="Confirm your new password"
-                required
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </div>
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center">
+                <FormLabel>Confirm password</FormLabel>
+              </div>
+              <FormControl>
+                <Input type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? (
-                <Loader2 size={16} className="animate-spin" />
-              ) : (
-                "Reset Password"
-              )}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : (
+            "Reset Password"
+          )}
+        </Button>
+      </form>
+    </Form>
   );
 }

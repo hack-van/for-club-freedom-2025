@@ -43,18 +43,17 @@ export default function SignUpPage() {
           setLoading(false);
           toast.error(ctx.error.message);
         },
-      },
+      }
     );
   };
   if (user === undefined) {
     return <div>Loading...</div>;
   }
-  if (user === null || user.role !== "admin") { //For devs to access this page without the admin role, comment out this condition
-    return (
-      <>Forbidden</>
-    )
+  if (user === null || user.role !== "admin") {
+    //For devs to access this page without the admin role, comment out this condition
+    return <>Forbidden</>;
   }
-  
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <Card className="max-w-md">

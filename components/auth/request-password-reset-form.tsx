@@ -1,76 +1,68 @@
-"use client"
+"use client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
-import { useEffect, useState } from "react";
 import { emailSchema } from "@/lib/schema";
- 
+import z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+
+const requestPasswordResetSchema = z.object({
+  email: emailSchema,
+});
+
+type RequestPasswordReset = z.infer<typeof requestPasswordResetSchema>;
+
 export function RequestPasswordResetForm() {
-  const [email, setEmail] = useState("");
-  const [debouncedEmail, setDebouncedEmail] = useState("");
-  const [isEmailValid, setIsEmailValid] = useState(false);
-  const [emailError, setEmailError] = useState<string | null>(null);
-  const [forgotLoading, setForgotLoading] = useState(false);
+  const form = useForm<RequestPasswordReset>({
+    defaultValues: {
+      email: "",
+    },
+    resolver: zodResolver(requestPasswordResetSchema),
+  });
 
-  useEffect(() => {
-    const t = setTimeout(() => {
-      const val = email;
-      setDebouncedEmail(val);
-
-      const result = emailSchema.safeParse(val);
-      if (result.success) {
-        setIsEmailValid(true);
-        setEmailError(null);
-      } else {
-        setIsEmailValid(false);
-        setEmailError("Invalid email format");
-      }
-    }, 300);
-
-    return () => clearTimeout(t);
-  }, [email]);
-
-  const handleResetPassword = async () => {
-    const parsed = emailSchema.safeParse(debouncedEmail);
-    if (!parsed.success) {
-      toast.error("Invalid email format");
-      return;
-    }
-    setForgotLoading(true);
+  const onSubmit = async (data: RequestPasswordReset) => {
     try {
       await authClient.requestPasswordReset({
-        email: debouncedEmail,
+        email: data.email,
         redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/reset-password`,
       });
-      toast.message("Check your email for the reset password link!");
+      toast.success("Check your email for the reset password link!");
     } catch (err) {
       toast.error("Password reset request failed. Please try again.");
-    } finally {
-      setForgotLoading(false);
     }
   };
-  
+
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleResetPassword();
-      }}
-    >
-      <div className="flex flex-col gap-4">
-        <Input
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-4"
+      >
+        <FormField
+          control={form.control}
           name="email"
-          placeholder="Email"
-          type="text"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="Jane Doe" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-        {debouncedEmail !== "" && emailError && (
-          <p className="text-sm text-red-500">{emailError}</p>
-        )}
-        <Button disabled={forgotLoading || !isEmailValid} type="submit" className="cursor-pointer">Request password reset</Button>
-      </div>
-    </form>
+        <Button type="submit">Request password reset</Button>
+      </form>
+    </Form>
   );
 }

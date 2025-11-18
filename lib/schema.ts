@@ -29,5 +29,5 @@ export const testimonialSchema = z
       });
     }
   });
-
+export const emailSchema = z.email({ message: "Please enter a valid email address" })
 export type Testimonial = z.infer<typeof testimonialSchema>;

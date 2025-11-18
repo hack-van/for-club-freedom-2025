@@ -4,6 +4,12 @@ import { DataModel } from "./_generated/dataModel";
 import { internalAction } from "./_generated/server";
 
 export const migrations = new Migrations<DataModel>(components.migrations);
+export const run = migrations.runner();
+
+export const setDefaultApprovedValue = migrations.define({
+  table: "testimonials",
+  migrateOne: () => ({ approved: true }),
+});
 
 export const backFillSearchText = migrations.define({
   table: "testimonials",

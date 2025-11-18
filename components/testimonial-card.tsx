@@ -12,6 +12,10 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { getApprovalStatusText } from "@/utils/testimonial-utils";
+import { isModOrAdmin } from "@/convex/lib/permissions";
 
 type Props = {
   testimonial: Doc<"testimonials"> & { mediaUrl?: string | null };
@@ -19,19 +23,26 @@ type Props = {
 
 export function TestimonialCard({ testimonial }: Props) {
   const date = new Date(testimonial._creationTime);
+  const user = useQuery(api.auth.getCurrentUser);
+  const approvalText = getApprovalStatusText(testimonial.approved);
   return (
     <Card className="w-full relative">
       <CardHeader>
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-center">
           <Link
             href={`/testimonials/${testimonial._id}`}
             className="hover:underline"
           >
             <CardTitle className="">{testimonial.title}</CardTitle>
           </Link>
-          <p className="text-xs text-muted-foreground min-w-[150px] text-right">
-            {formatDistanceToNow(date, { addSuffix: true })}
-          </p>
+          <div className="flex items-center gap-2">
+            {isModOrAdmin(user?.role) && (
+              <p className="text-sm">{approvalText}</p>
+            )}
+            <p className="text-xs text-muted-foreground whitespace-nowrap">
+              {formatDistanceToNow(date, { addSuffix: true })}
+            </p>
+          </div>
         </div>
         <p className="text-sm">
           Posted by <strong>{testimonial.name}</strong>

@@ -108,24 +108,26 @@ You must manually set the user's role in the betterAuth.users table.
 ### Set up R2 for Convex
 
 To set up R2 for Convex, follow the instructions in the _Cloudflare Account_ section in the [Convex R2 documentation](https://www.convex.dev/components/cloudflare-r2#cloudflare-account).
+
 ## Environment Variables
 
-Create a `.env` file in the root directory with the following variables:
+There are two sets of environment variables: one for the Convex backend and one for the local TanStack development
 
-```bash
-# Convex
-CONVEX_DEPLOYMENT=<your-convex-deployment-url>
-VITE_CONVEX_URL=<your-convex-url>
+- Convex backend: example of variables can be found in `.env.example` file.
+  You can set them in your Convex environment using the Convex CLI:
 
-# Cloudflare R2
-R2_ACCOUNT_ID=<your-cloudflare-account-id>
-R2_ACCESS_KEY_ID=<your-r2-access-key>
-R2_SECRET_ACCESS_KEY=<your-r2-secret-key>
-R2_BUCKET_NAME=<your-bucket-name>
+  ```bash
+  npx convex env set VARIABLE_NAME=value
+  ```
 
-# Google Gemini
-GOOGLE_GEMINI_API_KEY=<your-gemini-api-key>
-```
+- Local TanStack development: example of variables can be found in `.env.local.example` file.
+  You can copy it to `.env.local` by the following command:
+
+   ```bash
+   cp .env.local.example .env.local
+   ```
+
+   Then fill in the required values.
 
 ## Local Domains and HTTPS Setup
 
@@ -135,7 +137,6 @@ Add the following line to your `/etc/hosts` file (in Linux/MacOS) or `C:\Windows
 
 ```
 127.0.0.1 club-freedom.local
-127.0.0.1 admin.club-freedom.local
 ```
 
 Then flush your DNS cache:

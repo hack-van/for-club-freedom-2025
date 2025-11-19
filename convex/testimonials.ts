@@ -1,12 +1,7 @@
 import { v } from "convex/values";
-import { action, query } from "./_generated/server";
+import { query } from "./_generated/server";
 import { mutation } from "./functions";
 import { r2 } from "./r2";
-import { api } from "./_generated/api";
-import { createR2Client } from "@/lib/r2";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
-import { extension as getExtension } from "mime-types";
 
 export const getTestimonials = query({
   args: { searchQuery: v.optional(v.string()) },
@@ -63,8 +58,21 @@ export const postTestimonial = mutation({
       storageId,
       media_type,
       testimonialText: text,
+      createdAt: Date.now(),
+      approved: false,
     });
     return id;
+  },
+});
+
+export const updateTestimonialApproval = mutation({
+  args: {
+    id: v.id("testimonials"),
+    approved: v.boolean(),
+  },
+  handler: async (ctx, { id, approved }) => {
+    await ctx.db.patch(id, { approved });
+    return { id, approved };
   },
 });
 

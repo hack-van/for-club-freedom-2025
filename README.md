@@ -71,7 +71,7 @@ Open [https://localhost:3000](https://localhost:3000) with your browser to see t
 3. Add your site url to your convex environment variables
    `npx convex env set SITE_URL http://localhost:3000`
    In prod, use the prod site url
-4. Ensure you have VITE_CONVEX_SITE_URL and SITE_URL set in your .env.local file.
+4. Ensure you have VITE_CONVEX_SITE_URL and SITE_URL set in your .env file.
 
 For more details, visit this [guide](https://convex-better-auth.netlify.app/framework-guides/next)
 
@@ -113,21 +113,21 @@ To set up R2 for Convex, follow the instructions in the _Cloudflare Account_ sec
 
 There are two sets of environment variables: one for the Convex backend and one for the local TanStack development
 
-- Convex backend: example of variables can be found in `.env.example` file.
+- Convex backend: example of variables can be found in `convex/.env.example` file.
   You can set them in your Convex environment using the Convex CLI:
 
   ```bash
   npx convex env set VARIABLE_NAME=value
   ```
 
-- Local TanStack development: example of variables can be found in `.env.local.example` file.
-  You can copy it to `.env.local` by the following command:
+- Local TanStack development: example of variables can be found in `.env.example` file.
+  You can copy it to `.env` by the following command:
 
-   ```bash
-   cp .env.local.example .env.local
-   ```
+  ```bash
+  cp .env.example .env
+  ```
 
-   Then fill in the required values.
+  Then fill in the required values.
 
 ## Local Domains and HTTPS Setup
 

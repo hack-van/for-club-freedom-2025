@@ -1,18 +1,19 @@
 "use client";
 
 import { Testimonials } from "@/components/testimonials";
-import { authClient } from "@/lib/auth-client";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/testimonials/")({
   component: TestimonialsPage,
-  beforeLoad: async () => {
-    const { data } = await authClient.getSession();
-    if (!data) {
+  loader: async ({ context }) => {
+    if (!context.userId) {
       throw redirect({
         to: "/sign-in",
       });
     }
+    return {
+      userId: context.userId,
+    };
   },
 });
 

@@ -10,8 +10,6 @@
 
 import type * as auth from "../auth.js";
 import type * as email from "../email.js";
-import type * as emails_components_BaseEmail from "../emails/components/BaseEmail.js";
-import type * as emails_resetPassword from "../emails/resetPassword.js";
 import type * as functions from "../functions.js";
 import type * as http from "../http.js";
 import type * as internal_r2 from "../internal/r2.js";
@@ -30,8 +28,6 @@ import type {
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   email: typeof email;
-  "emails/components/BaseEmail": typeof emails_components_BaseEmail;
-  "emails/resetPassword": typeof emails_resetPassword;
   functions: typeof functions;
   http: typeof http;
   "internal/r2": typeof internal_r2;

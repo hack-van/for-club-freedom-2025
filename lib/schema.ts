@@ -29,5 +29,14 @@ export const testimonialSchema = z
       });
     }
   });
-export const emailSchema = z.email({ message: "Please enter a valid email address" })
+
+export const emailSchema = z.email({
+  message: "Please enter a valid email address",
+});
+
+export const signInSchema = z.object({
+  email: emailSchema,
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
 export type Testimonial = z.infer<typeof testimonialSchema>;

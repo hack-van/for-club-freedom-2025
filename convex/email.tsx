@@ -2,7 +2,7 @@ import { Resend } from "@convex-dev/resend";
 import { type ActionCtx } from "@/convex/_generated/server";
 import { components } from "@/convex/_generated/api";
 import { render } from "@react-email/components";
-import ResetPasswordEmail from "@/convex/emails/resetPassword";
+import ResetPasswordEmail from "@/components/emails/reset-password";
 
 export const resend = new Resend(components.resend, {
   testMode: false,
@@ -16,7 +16,7 @@ export const sendResetPassword = async (
   }: {
     to: string;
     url: string;
-  },
+  }
 ) => {
   await resend.sendEmail(ctx, {
     from: `Club Freedom <${process.env.AUTH_EMAIL}>`,

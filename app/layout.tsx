@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/navbar";
-import { ConvexClientProvider } from "@/components/layouts/ConvexClientProvider";
+import { ConvexClientProvider } from "@/components/providers/convex-client-provider";
 import { Toaster } from "@/components/ui/sonner";
 
 const openSans = Open_Sans({
@@ -20,14 +19,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <html lang="en">
-        <body className={`${openSans.className} antialiased`}>
-          <ConvexClientProvider>
-            <Navbar />
-            {children}
-          </ConvexClientProvider>
-          <Toaster position="bottom-center" richColors />
-        </body>
-      </html>
+    <html lang="en">
+      <body className={`${openSans.className} antialiased`}>
+        <ConvexClientProvider>{children}</ConvexClientProvider>
+        <Toaster position="bottom-center" richColors />
+      </body>
+    </html>
   );
 }

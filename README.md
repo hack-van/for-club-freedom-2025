@@ -71,7 +71,7 @@ Open [https://localhost:3000](https://localhost:3000) with your browser to see t
 3. Add your site url to your convex environment variables
    `npx convex env set SITE_URL http://localhost:3000`
    In prod, use the prod site url
-4. Ensure you have NEXT_PUBLIC_CONVEX_SITE_URL and SITE_URL set in your .env.local file.
+4. Ensure you have VITE_CONVEX_SITE_URL and SITE_URL set in your .env.local file.
 
 For more details, visit this [guide](https://convex-better-auth.netlify.app/framework-guides/next)
 

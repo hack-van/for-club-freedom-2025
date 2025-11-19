@@ -9,21 +9,37 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TestimonialsRouteRouteImport } from './routes/testimonials/route'
+import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TestimonialsIndexRouteImport } from './routes/testimonials/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as TestimonialsIdRouteImport } from './routes/testimonials/$id'
+import { Route as AdminCreateUserRouteImport } from './routes/admin/create-user'
+import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
+import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
+import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-password'
 import { Route as TestimonialsIdMediaDownloadRouteImport } from './routes/testimonials/$id.media-download'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 
+const TestimonialsRouteRoute = TestimonialsRouteRouteImport.update({
+  id: '/testimonials',
+  path: '/testimonials',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/_auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TestimonialsIndexRoute = TestimonialsIndexRouteImport.update({
-  id: '/testimonials/',
-  path: '/testimonials/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => TestimonialsRouteRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
@@ -31,9 +47,29 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const TestimonialsIdRoute = TestimonialsIdRouteImport.update({
-  id: '/testimonials/$id',
-  path: '/testimonials/$id',
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => TestimonialsRouteRoute,
+} as any)
+const AdminCreateUserRoute = AdminCreateUserRouteImport.update({
+  id: '/admin/create-user',
+  path: '/admin/create-user',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthSignInRoute = AuthSignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const TestimonialsIdMediaDownloadRoute =
   TestimonialsIdMediaDownloadRouteImport.update({
@@ -41,62 +77,119 @@ const TestimonialsIdMediaDownloadRoute =
     path: '/media-download',
     getParentRoute: () => TestimonialsIdRoute,
   } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/testimonials': typeof TestimonialsRouteRouteWithChildren
+  '/forgot-password': typeof AuthForgotPasswordRoute
+  '/reset-password': typeof AuthResetPasswordRoute
+  '/sign-in': typeof AuthSignInRoute
+  '/admin/create-user': typeof AdminCreateUserRoute
   '/testimonials/$id': typeof TestimonialsIdRouteWithChildren
   '/admin': typeof AdminIndexRoute
-  '/testimonials': typeof TestimonialsIndexRoute
+  '/testimonials/': typeof TestimonialsIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/testimonials/$id/media-download': typeof TestimonialsIdMediaDownloadRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/forgot-password': typeof AuthForgotPasswordRoute
+  '/reset-password': typeof AuthResetPasswordRoute
+  '/sign-in': typeof AuthSignInRoute
+  '/admin/create-user': typeof AdminCreateUserRoute
   '/testimonials/$id': typeof TestimonialsIdRouteWithChildren
   '/admin': typeof AdminIndexRoute
   '/testimonials': typeof TestimonialsIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/testimonials/$id/media-download': typeof TestimonialsIdMediaDownloadRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_auth': typeof AuthRouteRouteWithChildren
+  '/testimonials': typeof TestimonialsRouteRouteWithChildren
+  '/_auth/forgot-password': typeof AuthForgotPasswordRoute
+  '/_auth/reset-password': typeof AuthResetPasswordRoute
+  '/_auth/sign-in': typeof AuthSignInRoute
+  '/admin/create-user': typeof AdminCreateUserRoute
   '/testimonials/$id': typeof TestimonialsIdRouteWithChildren
   '/admin/': typeof AdminIndexRoute
   '/testimonials/': typeof TestimonialsIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/testimonials/$id/media-download': typeof TestimonialsIdMediaDownloadRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/testimonials'
+    | '/forgot-password'
+    | '/reset-password'
+    | '/sign-in'
+    | '/admin/create-user'
     | '/testimonials/$id'
     | '/admin'
-    | '/testimonials'
+    | '/testimonials/'
+    | '/api/auth/$'
     | '/testimonials/$id/media-download'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/forgot-password'
+    | '/reset-password'
+    | '/sign-in'
+    | '/admin/create-user'
     | '/testimonials/$id'
     | '/admin'
     | '/testimonials'
+    | '/api/auth/$'
     | '/testimonials/$id/media-download'
   id:
     | '__root__'
     | '/'
+    | '/_auth'
+    | '/testimonials'
+    | '/_auth/forgot-password'
+    | '/_auth/reset-password'
+    | '/_auth/sign-in'
+    | '/admin/create-user'
     | '/testimonials/$id'
     | '/admin/'
     | '/testimonials/'
+    | '/api/auth/$'
     | '/testimonials/$id/media-download'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  TestimonialsIdRoute: typeof TestimonialsIdRouteWithChildren
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  TestimonialsRouteRoute: typeof TestimonialsRouteRouteWithChildren
+  AdminCreateUserRoute: typeof AdminCreateUserRoute
   AdminIndexRoute: typeof AdminIndexRoute
-  TestimonialsIndexRoute: typeof TestimonialsIndexRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/testimonials': {
+      id: '/testimonials'
+      path: '/testimonials'
+      fullPath: '/testimonials'
+      preLoaderRoute: typeof TestimonialsRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -106,10 +199,10 @@ declare module '@tanstack/react-router' {
     }
     '/testimonials/': {
       id: '/testimonials/'
-      path: '/testimonials'
-      fullPath: '/testimonials'
+      path: '/'
+      fullPath: '/testimonials/'
       preLoaderRoute: typeof TestimonialsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof TestimonialsRouteRoute
     }
     '/admin/': {
       id: '/admin/'
@@ -120,10 +213,38 @@ declare module '@tanstack/react-router' {
     }
     '/testimonials/$id': {
       id: '/testimonials/$id'
-      path: '/testimonials/$id'
+      path: '/$id'
       fullPath: '/testimonials/$id'
       preLoaderRoute: typeof TestimonialsIdRouteImport
+      parentRoute: typeof TestimonialsRouteRoute
+    }
+    '/admin/create-user': {
+      id: '/admin/create-user'
+      path: '/admin/create-user'
+      fullPath: '/admin/create-user'
+      preLoaderRoute: typeof AdminCreateUserRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_auth/sign-in': {
+      id: '/_auth/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof AuthSignInRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/reset-password': {
+      id: '/_auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/forgot-password': {
+      id: '/_auth/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/testimonials/$id/media-download': {
       id: '/testimonials/$id/media-download'
@@ -132,8 +253,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestimonialsIdMediaDownloadRouteImport
       parentRoute: typeof TestimonialsIdRoute
     }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
+
+interface AuthRouteRouteChildren {
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+  AuthSignInRoute: typeof AuthSignInRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
+  AuthSignInRoute: AuthSignInRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
 
 interface TestimonialsIdRouteChildren {
   TestimonialsIdMediaDownloadRoute: typeof TestimonialsIdMediaDownloadRoute
@@ -147,11 +291,26 @@ const TestimonialsIdRouteWithChildren = TestimonialsIdRoute._addFileChildren(
   TestimonialsIdRouteChildren,
 )
 
+interface TestimonialsRouteRouteChildren {
+  TestimonialsIdRoute: typeof TestimonialsIdRouteWithChildren
+  TestimonialsIndexRoute: typeof TestimonialsIndexRoute
+}
+
+const TestimonialsRouteRouteChildren: TestimonialsRouteRouteChildren = {
+  TestimonialsIdRoute: TestimonialsIdRouteWithChildren,
+  TestimonialsIndexRoute: TestimonialsIndexRoute,
+}
+
+const TestimonialsRouteRouteWithChildren =
+  TestimonialsRouteRoute._addFileChildren(TestimonialsRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  TestimonialsIdRoute: TestimonialsIdRouteWithChildren,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
+  TestimonialsRouteRoute: TestimonialsRouteRouteWithChildren,
+  AdminCreateUserRoute: AdminCreateUserRoute,
   AdminIndexRoute: AdminIndexRoute,
-  TestimonialsIndexRoute: TestimonialsIndexRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,12 +1,10 @@
-"use client";
-
-import Link from "next/link";
 import { Button } from "./ui/button";
 import { Authenticated, Unauthenticated, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { isModOrAdmin } from "@/convex/lib/permissions";
 import Logo from "./logo";
 import UserDropDown from "./user-dropdown";
+import { Link } from "@tanstack/react-router";
 
 export default function Navbar() {
   const user = useQuery(api.auth.getCurrentUser);
@@ -19,7 +17,7 @@ export default function Navbar() {
           <Authenticated>
             <div className="flex items-center gap-4">
               <Button variant="link" className="cursor-pointer" asChild>
-                <Link href="/testimonials">Testimonials</Link>
+                <Link to="/testimonials">Testimonials</Link>
               </Button>
             </div>
           </Authenticated>
@@ -27,7 +25,7 @@ export default function Navbar() {
       </div>
       <Unauthenticated>
         <Button asChild>
-          <Link href="/sign-in">Sign in</Link>
+          <Link to="/sign-in">Sign in</Link>
         </Button>
       </Unauthenticated>
       <Authenticated>

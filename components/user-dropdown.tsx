@@ -11,15 +11,15 @@ import { useQuery } from "convex/react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { UserRoundIcon } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 
 export default function UserDropDown() {
   const user = useQuery(api.auth.getCurrentUser);
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const handleSignOut = async () => {
     await authClient.signOut();
-    router.push("/sign-in");
+    navigate({ to: "/sign-in" });
   };
 
   if (!user) {

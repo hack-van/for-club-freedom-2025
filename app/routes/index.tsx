@@ -1,4 +1,3 @@
-import TestimonialForm from "@/components/form/testinomial-form";
 import { createFileRoute } from "@tanstack/react-router";
 import TestonomialForm from "@/components/forms/testinomial-form";
 import Navbar from "@/components/navbar";

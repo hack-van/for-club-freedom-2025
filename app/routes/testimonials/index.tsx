@@ -2,26 +2,13 @@
 
 import { Testimonials } from "@/components/testimonials";
 import { createFileRoute } from "@tanstack/react-router";
+import { Authenticated } from "convex/react";
 
 export const Route = createFileRoute("/testimonials/")({
   component: TestimonialsPage,
 });
 
 function TestimonialsPage() {
-import { Authenticated, useConvexAuth } from "convex/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-
-export default function TestimonialsPage() {
-  const { isAuthenticated, isLoading } = useConvexAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.replace("/sign-in");
-    }
-  }, [isAuthenticated, isLoading, router]);
-
   return (
     <Authenticated>
       <main className="container mx-auto px-4">

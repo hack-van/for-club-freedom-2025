@@ -114,17 +114,18 @@ To set up R2 for Convex, follow the instructions in the _Cloudflare Account_ sec
 There are two sets of environment variables: one for the Convex backend and one for the local TanStack development
 
 - Convex backend: example of variables can be found in `convex/.env.example` file.
-  You can set them in your Convex environment using the Convex CLI:
+  
+  You can set them in your Convex environment using the Convex CLI below or in the Convex dashboard.
 
   ```bash
   npx convex env set VARIABLE_NAME=value
   ```
 
 - Local TanStack development: example of variables can be found in `.env.example` file.
-  You can copy it to `.env` by the following command:
+  You can copy it to `.env.local` by the following command:
 
   ```bash
-  cp .env.example .env
+  cp .env.example .env.local
   ```
 
   Then fill in the required values.

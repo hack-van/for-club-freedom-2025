@@ -50,3 +50,6 @@ certificates
 
 # tanstack
 .tanstack
+
+# cloudflare
+.wrangler/

@@ -8,9 +8,10 @@
     "build": "vite build && tsc --noEmit",
     "preview": "vite preview",
     "tsr:generate": "tsr generate",
-    "deploy": "npm run build && wrangler deploy",
-    "deploy:preview": "npm run build && wrangler deploy --env preview",
-    "deploy:production": "npm run build && wrangler deploy",
+    "secret:bulk": "wrangler secret bulk",
+    "deploy": "pnpm run build && wrangler deploy",
+    "deploy:preview": "pnpm run build && wrangler deploy --env preview",
+    "deploy:production": "pnpm run build && wrangler deploy",
     "cf-typegen": "wrangler types",
     "run_in_isolation": "tsx"
   },

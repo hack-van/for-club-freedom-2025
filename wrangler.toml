@@ -3,10 +3,6 @@ compatibility_date = "2025-09-02"
 compatibility_flags = [ "nodejs_compat" ]
 main = "@tanstack/react-start/server-entry"
 
-# Preview environment configuration
-[vars]
-# Use secret keys to protect sensitive information in preview deployments
-
 [observability]
 enabled = false
 head_sampling_rate = 1

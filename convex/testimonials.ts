@@ -7,6 +7,11 @@ import { isModOrAdmin } from "./lib/permissions";
 export const getTestimonials = query({
   args: { searchQuery: v.optional(v.string()) },
   handler: async (ctx, { searchQuery }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    const role = identity?.role ?? "";
+    if (!isModOrAdmin(role as string)) {  
+      throw new Error("Unauthorized");
+    }
     let testimonials: any[] = [];
 
     if (searchQuery && searchQuery.trim() !== "") {

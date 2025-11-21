@@ -25,6 +25,7 @@ import MobileVideoRecorder from "../recorder/mobile-video-recorder";
 import { Testimonial, testimonialSchema } from "@/lib/schema";
 import { useNavigate } from "@tanstack/react-router";
 import { AudioRecorder, VideoRecorder } from "../recorder";
+import { Turnstile } from '@marsidev/react-turnstile'
 
 export default function TestimonialForm() {
   const form = useForm<Testimonial>({
@@ -38,6 +39,9 @@ export default function TestimonialForm() {
 
   const [tabValue, setTabValue] = useState("video");
 
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRequired = true;
+
   const handleTabChange = (value: string) => {
     setTabValue(value);
     form.resetField("mediaFile");
@@ -49,6 +53,10 @@ export default function TestimonialForm() {
 
   async function onSubmit(values: Testimonial) {
     try {
+      if (turnstileRequired && !turnstileToken) {
+        toast.error("Please complete the human verification (Turnstile).");
+        return;
+      }
       let storageId: string | undefined = undefined;
       let media_type = "text";
       if (values.mediaFile) {
@@ -76,6 +84,7 @@ export default function TestimonialForm() {
         description: "Thank you for your submission.",
       });
       form.reset();
+      setTurnstileToken(null);
       navigation({ to: "/testimonials/$id", params: { id } });
     } catch (error) {
       console.error("Error submitting testimonial:", error);
@@ -225,7 +234,18 @@ export default function TestimonialForm() {
               </FormItem>
             )}
           />
-          <Button type="submit" disabled={form.formState.isSubmitting}>
+          <Turnstile
+            siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+            onSuccess={(token: string) => setTurnstileToken(token)}
+            onExpire={() => setTurnstileToken(null)}
+          />
+          {turnstileRequired && !turnstileToken && (
+            <p className="text-sm text-red-600">Please complete the verification above.</p>
+          )}
+          <Button
+            type="submit"
+            disabled={form.formState.isSubmitting || (turnstileRequired && !turnstileToken)}
+          >
             {form.formState.isSubmitting && <Spinner />}
             {form.formState.isSubmitting ? "Submitting..." : "Submit"}
           </Button>

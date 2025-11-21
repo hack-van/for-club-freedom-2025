@@ -114,7 +114,7 @@ To set up R2 for Convex, follow the instructions in the _Cloudflare Account_ sec
 There are two sets of environment variables: one for the Convex backend and one for the local TanStack development
 
 - Convex backend: example of variables can be found in `convex/.env.example` file.
-  
+
   You can set them in your Convex environment using the Convex CLI below or in the Convex dashboard.
 
   ```bash
